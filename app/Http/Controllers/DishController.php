@@ -34,13 +34,19 @@ class DishController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
-            'dish_category_id' => ['required', 'exists:dish_categories,id'],
+            'category_id' => ['required', 'exists:dish_categories,id'],
             'is_available' => ['boolean'],
         ]);
 
         Dish::create([
-            ...$validated,
             'restaurant_id' => $restaurantId,
+            'dish_category_id' => $validated['category_id'],
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'price_small' => $validated['price'],
+            'price_medium' => $validated['price'],
+            'price_large' => $validated['price'],
+            'is_available' => $validated['is_available'] ?? true,
         ]);
 
         return redirect()->route('dishes.index');
@@ -61,11 +67,19 @@ class DishController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
-            'dish_category_id' => ['required', 'exists:dish_categories,id'],
+            'category_id' => ['required', 'exists:dish_categories,id'],
             'is_available' => ['boolean'],
         ]);
 
-        $dish->update($validated);
+        $dish->update([
+            'dish_category_id' => $validated['category_id'],
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'price_small' => $validated['price'],
+            'price_medium' => $validated['price'],
+            'price_large' => $validated['price'],
+            'is_available' => $validated['is_available'] ?? true,
+        ]);
 
         return redirect()->route('dishes.index');
     }

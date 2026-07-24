@@ -49,7 +49,7 @@ class DishCategoryController extends Controller
     {
         $this->authorize('update', $dishCategory);
 
-        return view('dish-categories.edit', compact('dishCategory'));
+        return view('dish-categories.edit', ['category' => $dishCategory]);
     }
 
     public function update(Request $request, DishCategory $dishCategory)

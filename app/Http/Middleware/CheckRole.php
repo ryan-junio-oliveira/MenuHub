@@ -10,7 +10,12 @@ class CheckRole
 {
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
-        if (!$request->user() || !in_array($request->user()->role, $roles)) {
+        $allowedRoles = collect($roles)
+            ->flatMap(fn($role) => explode(',', $role))
+            ->map(fn($role) => trim($role))
+            ->toArray();
+
+        if (!$request->user() || !in_array($request->user()->role, $allowedRoles)) {
             abort(403);
         }
 

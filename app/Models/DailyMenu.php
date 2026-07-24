@@ -22,9 +22,19 @@ class DailyMenu extends Model
     protected function casts(): array
     {
         return [
-            'menu_date' => 'date',
+            'menu_date' => 'date:Y-m-d',
             'is_published' => 'boolean',
         ];
+    }
+
+    public function getDateAttribute(): mixed
+    {
+        return $this->menu_date;
+    }
+
+    public function getMaxSelectionsAttribute(): int
+    {
+        return $this->items->min('max_selections') ?? 3;
     }
 
     public function restaurant(): BelongsTo

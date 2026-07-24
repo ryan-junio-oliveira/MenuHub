@@ -21,7 +21,9 @@
     "dependencies": {
         "@types/three": "^0.185.1",
         "gsap": "^3.15.0",
+        "laravel-echo": "^2.4.0",
         "motion": "^12.42.2",
+        "pusher-js": "^8.6.0",
         "three": "^0.185.1"
     }
 }

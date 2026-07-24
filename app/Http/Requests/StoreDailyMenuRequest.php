@@ -14,9 +14,15 @@ class StoreDailyMenuRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'menu_date' => ['required', 'date'],
-            'title' => ['nullable', 'string', 'max:255'],
-            'notes' => ['nullable', 'string'],
+            'date' => ['required', 'date'],
+            'dishes' => ['nullable', 'array'],
+            'dishes.*' => ['exists:dishes,id'],
+            'price_small' => ['nullable', 'array'],
+            'price_small.*' => ['nullable', 'numeric', 'min:0'],
+            'price_medium' => ['nullable', 'array'],
+            'price_medium.*' => ['nullable', 'numeric', 'min:0'],
+            'price_large' => ['nullable', 'array'],
+            'price_large.*' => ['nullable', 'numeric', 'min:0'],
             'is_published' => ['boolean'],
         ];
     }

@@ -42,9 +42,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/daily-menus/{daily_menu}/publish', [DailyMenuController::class, 'publish'])->name('daily-menus.publish');
         Route::get('/customers/search', [CustomerController::class, 'search'])->name('customers.search');
         Route::resource('customers', CustomerController::class);
-        Route::resource('orders', OrderController::class)->only(['index', 'create', 'store', 'show']);
-        Route::put('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
         Route::get('/orders/kanban', [OrderController::class, 'kanban'])->name('orders.kanban');
+        Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');
+        Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+        Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+        Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+        Route::put('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
 
         Route::prefix('reports')->name('reports.')->group(function () {
             Route::get('/', [ReportController::class, 'index'])->name('index');
@@ -52,6 +55,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/dishes', [ReportController::class, 'dishes'])->name('dishes');
             Route::get('/combinations', [ReportController::class, 'combinations'])->name('combinations');
             Route::get('/hours', [ReportController::class, 'hours'])->name('hours');
+            Route::get('/demand', [ReportController::class, 'demand'])->name('demand');
         });
 
         Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
@@ -60,7 +64,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::middleware(['tenant', 'role:admin,user'])->group(function () {
         Route::get('/orders/kanban', [OrderController::class, 'kanban'])->name('orders.kanban');
-        Route::resource('orders', OrderController::class)->only(['index', 'show']);
+        Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+        Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     });
 });
 

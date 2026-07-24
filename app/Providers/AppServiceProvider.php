@@ -13,25 +13,63 @@ use App\Models\Delivery;
 use App\Models\Dish;
 use App\Models\DishCategory;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Payment;
 use App\Models\Scopes\TenantScope;
 use App\Models\Setting;
+use App\Services\Contracts\ThermalPrinterInterface;
+use App\Services\ThermalPrinterService;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
-        //
+        $this->app->bind(ThermalPrinterInterface::class, ThermalPrinterService::class);
+
+        $this->app->extend('translation.loader', function ($loader, $app) {
+            return new class ($loader) extends \Illuminate\Translation\FileLoader
+            {
+                public function __construct(
+                    private readonly \Illuminate\Translation\FileLoader $inner,
+                ) {
+                    // No parent constructor call
+                }
+
+                public function load($locale, $group, $namespace = null): array
+                {
+                    try {
+                        return $this->inner->load($locale, $group, $namespace);
+                    } catch (QueryException) {
+                        return [];
+                    }
+                }
+
+                public function addNamespace($namespace, $hint): void
+                {
+                    $this->inner->addNamespace($namespace, $hint);
+                }
+
+                public function addPath($path): void
+                {
+                    $this->inner->addPath($path);
+                }
+
+                public function addJsonPath($path): void
+                {
+                    $this->inner->addJsonPath($path);
+                }
+
+                public function namespaces(): array
+                {
+                    return $this->inner->namespaces();
+                }
+            };
+        });
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         Event::listen(
@@ -56,6 +94,7 @@ class AppServiceProvider extends ServiceProvider
         Dish::addGlobalScope(new TenantScope);
         DishCategory::addGlobalScope(new TenantScope);
         Order::addGlobalScope(new TenantScope);
+        OrderItem::addGlobalScope(new TenantScope);
         Payment::addGlobalScope(new TenantScope);
         Setting::addGlobalScope(new TenantScope);
     }

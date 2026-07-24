@@ -22,17 +22,10 @@ class OrderFactory extends Factory
             'subtotal' => fake()->randomFloat(2, 20, 100),
             'delivery_fee' => fake()->randomFloat(2, 0, 10),
             'discount' => 0,
-            'total' => 0,
+            'total' => fn(array $attrs) => ($attrs['subtotal'] ?? 0) + ($attrs['delivery_fee'] ?? 0) - ($attrs['discount'] ?? 0),
             'delivery_type' => fake()->randomElement(['delivery', 'pickup']),
             'delivery_address' => fake()->address(),
             'ordered_at' => fake()->dateTimeBetween('-7 days'),
         ];
-    }
-
-    public function configure(): static
-    {
-        return $this->afterCreating(function (Order $order) {
-            $order->update(['total' => $order->subtotal + $order->delivery_fee - $order->discount]);
-        });
     }
 }

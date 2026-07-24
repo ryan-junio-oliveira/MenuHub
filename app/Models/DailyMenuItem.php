@@ -13,8 +13,9 @@ class DailyMenuItem extends Model
     protected $fillable = [
         'daily_menu_id',
         'dish_id',
-        'size',
-        'price',
+        'price_small',
+        'price_medium',
+        'price_large',
         'max_selections',
         'is_available',
     ];
@@ -22,7 +23,9 @@ class DailyMenuItem extends Model
     protected function casts(): array
     {
         return [
-            'price' => 'decimal:2',
+            'price_small' => 'decimal:2',
+            'price_medium' => 'decimal:2',
+            'price_large' => 'decimal:2',
             'is_available' => 'boolean',
             'max_selections' => 'integer',
         ];

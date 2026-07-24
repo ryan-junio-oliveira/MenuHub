@@ -20,13 +20,13 @@ class ReportService
         if ($period === 'monthly') {
             $results = (clone $query)
                 ->select(
-                    DB::raw('MONTH(ordered_at) as month'),
+                    DB::raw("CAST(strftime('%m', ordered_at) AS INTEGER) as month"),
                     DB::raw('COUNT(*) as total_orders'),
                     DB::raw('SUM(total) as revenue'),
                     DB::raw('AVG(total) as average_order')
                 )
-                ->groupBy(DB::raw('MONTH(ordered_at)'))
-                ->orderBy(DB::raw('MONTH(ordered_at)'))
+                ->groupBy(DB::raw("CAST(strftime('%m', ordered_at) AS INTEGER)"))
+                ->orderBy(DB::raw("CAST(strftime('%m', ordered_at) AS INTEGER)"))
                 ->get();
 
             $months = collect(range(1, 12))->mapWithKeys(fn($m) => [
@@ -66,8 +66,8 @@ class ReportService
     {
         return Order::where('restaurant_id', $restaurantId)
             ->where('status', '!=', Order::STATUS_CANCELED)
-            ->select(DB::raw('HOUR(ordered_at) as hour'), DB::raw('COUNT(*) as total'))
-            ->groupBy(DB::raw('HOUR(ordered_at)'))
+            ->select(DB::raw("CAST(strftime('%H', ordered_at) AS INTEGER) as hour"), DB::raw('COUNT(*) as total'))
+            ->groupBy(DB::raw("CAST(strftime('%H', ordered_at) AS INTEGER)"))
             ->orderBy('hour')
             ->get()
             ->toArray();
@@ -77,14 +77,16 @@ class ReportService
     {
         return DB::select("
             SELECT 
-                GROUP_CONCAT(DISTINCT oi1.dish_name ORDER BY oi1.dish_name SEPARATOR ' + ') as combination,
+                GROUP_CONCAT(od.dish_name, ' + ') as combination,
                 COUNT(*) as frequency
-            FROM order_items oi1
-            INNER JOIN orders o ON oi1.order_id = o.id
-            INNER JOIN order_items oi2 ON oi1.order_id = oi2.order_id AND oi1.id < oi2.id
-            WHERE o.restaurant_id = ?
-            AND o.status != ?
-            GROUP BY oi1.order_id
+            FROM (
+                SELECT DISTINCT oi.order_id, oi.dish_name
+                FROM order_items oi
+                INNER JOIN orders o ON oi.order_id = o.id
+                WHERE o.restaurant_id = ?
+                AND o.status != ?
+            ) od
+            GROUP BY od.order_id
             HAVING COUNT(*) > 1
             ORDER BY frequency DESC
             LIMIT ?

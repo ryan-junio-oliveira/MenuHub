@@ -9,8 +9,9 @@ class SendOrderStatusNotification
 {
     public function handle(OrderStatusChanged $event): void
     {
-        if ($event->order->customer) {
-            $event->order->customer->notify(new OrderStatusUpdated($event->order));
+        $customer = $event->order->customer;
+        if ($customer && method_exists($customer, 'notify')) {
+            $customer->notify(new OrderStatusUpdated($event->order));
         }
     }
 }

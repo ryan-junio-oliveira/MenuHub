@@ -38,6 +38,16 @@ class Dish extends Model
         ];
     }
 
+    public function getPriceAttribute(): ?float
+    {
+        return $this->price_medium ?? $this->price_small ?? $this->price_large;
+    }
+
+    public function getCategoryIdAttribute(): ?int
+    {
+        return $this->dish_category_id;
+    }
+
     public function restaurant(): BelongsTo
     {
         return $this->belongsTo(Restaurant::class);
@@ -46,5 +56,10 @@ class Dish extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(DishCategory::class, 'dish_category_id');
+    }
+
+    public function dishCategory(): BelongsTo
+    {
+        return $this->category();
     }
 }

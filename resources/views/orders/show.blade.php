@@ -15,7 +15,13 @@
             <h1 class="page-title">{{ __('Pedido') }} #{{ $order->id }}</h1>
             <x-status-badge :status="$order->status" />
         </div>
-        <p class="text-sm text-text-secondary">{{ $order->created_at instanceof \Carbon\Carbon ? $order->created_at->format('d/m/Y \à\s H:i') : $order->created_at }}</p>
+        <div class="flex items-center gap-3">
+            <button x-on:click="printThermal()" class="inline-flex items-center gap-1.5 text-sm font-medium text-text-secondary hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                <i class="fa-solid fa-print text-sm"></i>
+                {{ __('Imprimir Comanda') }}
+            </button>
+            <p class="text-sm text-text-secondary">{{ $order->created_at instanceof \Carbon\Carbon ? $order->created_at->format('d/m/Y \à\s H:i') : $order->created_at }}</p>
+        </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
@@ -83,6 +89,23 @@
                         <span class="text-text-primary dark:text-text-dark">R$ {{ number_format($order->total, 2, ',', '.') }}</span>
                     </div>
                 </div>
+
+                @if (($order->payment_method ?? '') === 'pix' && ($order->restaurant->pix_key ?? false))
+                <div class="mt-4 p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fa-solid fa-qrcode text-green-600 dark:text-green-400 text-sm"></i>
+                        <span class="text-sm font-semibold text-green-800 dark:text-green-200">{{ __('Pagamento PIX') }}</span>
+                    </div>
+                    <p class="text-xs text-green-700 dark:text-green-300 mb-2">{{ __('Chave PIX Copia e Cola:') }}</p>
+                    <div class="flex items-center gap-2">
+                        <code class="flex-1 text-xs font-mono bg-white dark:bg-green-900/40 px-3 py-2 rounded-lg border border-green-200 dark:border-green-700 text-green-800 dark:text-green-200 truncate">{{ $order->restaurant->pix_key }}</code>
+                        <button x-on:click="navigator.clipboard.writeText('{{ $order->restaurant->pix_key }}'); $el.innerHTML = '<i class=\'fa-solid fa-check\'></i>'; setTimeout(() => $el.innerHTML = '<i class=\'fa-regular fa-copy\'></i>', 2000)"
+                            class="px-3 py-2 rounded-lg bg-green-600 text-white text-sm hover:bg-green-700 transition-colors">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+                @endif
             </x-card>
         </div>
     </div>
@@ -141,4 +164,79 @@
     </x-card>
 </div>
 
+@push('scripts')
+<script>
+    function printThermal() {
+        const order = @json($order->load('items'));
+        const restaurant = @json($order->restaurant);
+        const width = 48;
+        const d = '-'.repeat(width);
+        const td = '='.repeat(width);
+        const pad = (s, len) => String(s).padStart(len, ' ');
+        const center = (s) => ' '.repeat(Math.floor((width - s.length) / 2)) + s;
+
+        let lines = [];
+        lines.push('');
+        lines.push(center('COMANDA DE COZINHA'));
+        lines.push(td);
+        lines.push('Pedido: #' + order.order_number);
+        lines.push('Data: ' + new Date(order.ordered_at || order.created_at).toLocaleString('pt-BR'));
+        lines.push('Cliente: ' + (order.customer?.name || 'Avulso'));
+        lines.push(d);
+
+        if (order.delivery_type === 'delivery') {
+            lines.push('Tipo: ENTREGA');
+            if (order.delivery_address) lines.push('End: ' + order.delivery_address);
+        } else {
+            lines.push('Tipo: RETIRADA');
+        }
+
+        lines.push(d);
+        lines.push('ITEM' + ' '.repeat(width - 15) + 'QTD  VALOR');
+        lines.push(d);
+
+        (order.items || []).forEach(item => {
+            const name = item.dish_name + (item.size ? ' [' + item.size.charAt(0).toUpperCase() + ']' : '');
+            const qty = String(item.quantity);
+            const price = 'R$ ' + Number(item.unit_price).toFixed(2).replace('.', ',');
+            const line = name.padEnd(width - 12) + qty.padStart(3) + '  ' + price.padStart(9);
+            lines.push(line.substring(0, width));
+        });
+
+        lines.push(d);
+        lines.push(pad('TOTAL: R$ ' + Number(order.total).toFixed(2).replace('.', ','), width));
+        if (order.payment_method) {
+            const labels = { pix: 'PIX', credit_card: 'Cartao Credito', debit_card: 'Cartao Debito', cash: 'Dinheiro' };
+            lines.push(pad('Pagamento: ' + (labels[order.payment_method] || order.payment_method), width));
+        }
+        if (restaurant?.pix_key && order.payment_method === 'pix') {
+            lines.push(pad('Chave PIX: ' + restaurant.pix_key, width));
+        }
+        if (order.customer_notes) {
+            lines.push(d);
+            lines.push('Obs: ' + order.customer_notes);
+        }
+
+        lines.push(td);
+        lines.push(center('MenuHub - Comanda de Cozinha'));
+        lines.push(center(new Date().toLocaleString('pt-BR')));
+        lines.push('');
+
+        const printWindow = window.open('', '_blank', 'width=400,height=600,menubar=no,toolbar=no');
+        printWindow.document.write(`
+            <html><head>
+                <title>Comanda #${order.order_number}</title>
+                <style>
+                    @page { margin: 0; }
+                    body { font-family: 'Courier New', monospace; font-size: 11px; white-space: pre; line-height: 1.2; padding: 8px; }
+                </style>
+            </head><body>
+                <pre style="font-family:'Courier New',monospace;font-size:11px;">${lines.join('\n')}</pre>
+                <script>window.onload=function(){window.print();setTimeout(()=>window.close(),1000)}<\/script>
+            </body></html>
+        `);
+        printWindow.document.close();
+    }
+</script>
+@endpush
 @endsection

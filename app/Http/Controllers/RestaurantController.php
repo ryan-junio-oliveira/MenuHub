@@ -14,6 +14,13 @@ class RestaurantController extends Controller
         private readonly SettingService $settingService,
     ) {}
 
+    public function index()
+    {
+        $restaurants = Restaurant::withCount('users')->orderBy('name')->get();
+
+        return view('root.restaurants', compact('restaurants'));
+    }
+
     public function create()
     {
         return view('restaurant.create');

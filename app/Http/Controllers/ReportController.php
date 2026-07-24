@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\DemandPredictionService;
 use App\Services\ReportService;
 use Illuminate\Http\Request;
 
@@ -9,6 +10,7 @@ class ReportController extends Controller
 {
     public function __construct(
         private readonly ReportService $reportService,
+        private readonly DemandPredictionService $demandPredictionService,
     ) {}
 
     public function index(Request $request)
@@ -68,5 +70,14 @@ class ReportController extends Controller
         $peakHours = $this->reportService->getPeakHours($restaurantId);
 
         return view('reports.hours', compact('peakHours'));
+    }
+
+    public function demand(Request $request)
+    {
+        $restaurantId = $request->user()->restaurant_id;
+
+        $prediction = $this->demandPredictionService->predictWeeklyDemand($restaurantId);
+
+        return view('reports.demand', compact('prediction'));
     }
 }

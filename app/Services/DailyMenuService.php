@@ -14,15 +14,20 @@ class DailyMenuService
     {
         $menuDate = $date ? Carbon::parse($date) : Carbon::today();
 
-        return DailyMenu::firstOrCreate(
-            ['restaurant_id' => $restaurantId, 'menu_date' => $menuDate->format('Y-m-d')],
-            [
+        $menu = DailyMenu::where('restaurant_id', $restaurantId)
+            ->whereDate('menu_date', $menuDate)
+            ->first();
+
+        if (!$menu) {
+            $menu = DailyMenu::create([
                 'restaurant_id' => $restaurantId,
-                'menu_date' => $menuDate,
+                'menu_date' => $menuDate->format('Y-m-d'),
                 'title' => 'Menu - ' . $menuDate->format('d/m/Y'),
                 'is_published' => false,
-            ]
-        );
+            ]);
+        }
+
+        return $menu;
     }
 
     public function syncMenuItems(DailyMenu $menu, array $items): DailyMenu
@@ -31,13 +36,12 @@ class DailyMenuService
             $menu->items()->delete();
 
             foreach ($items as $item) {
-                $dish = Dish::findOrFail($item['dish_id']);
-
                 $menu->items()->create([
-                    'dish_id' => $dish->id,
-                    'size' => $item['size'] ?? 'medium',
-                    'price' => $item['price'],
-                    'max_selections' => $item['max_selections'] ?? $dish->max_selections,
+                    'dish_id' => $item['dish_id'],
+                    'price_small' => $item['price_small'] ?? null,
+                    'price_medium' => $item['price_medium'] ?? null,
+                    'price_large' => $item['price_large'] ?? null,
+                    'max_selections' => $item['max_selections'] ?? 1,
                     'is_available' => $item['is_available'] ?? true,
                 ]);
             }
