@@ -35,4 +35,13 @@ return [
         ],
     ],
 
+    'whatsapp' => [
+        'token' => env('WHATSAPP_API_TOKEN'),
+        'phone_id' => env('WHATSAPP_PHONE_ID'),
+        'business_account_id' => env('WHATSAPP_BUSINESS_ACCOUNT_ID'),
+        'verify_token' => env('WHATSAPP_VERIFY_TOKEN', 'menuhub_webhook_2024'),
+        'api_version' => 'v21.0',
+        'api_base' => 'https://graph.facebook.com/v21.0',
+    ],
+
 ];

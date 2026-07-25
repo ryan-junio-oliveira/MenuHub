@@ -3,6 +3,8 @@
 namespace App\Jobs;
 
 use App\Models\Restaurant;
+use App\Services\WhatsAppBotService;
+use App\Services\Contracts\WhatsAppInterface;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
@@ -18,8 +20,20 @@ class ProcessWhatsAppMessage implements ShouldQueue
         public array $payload
     ) {}
 
-    public function handle(): void
+    public function handle(WhatsAppInterface $whatsApp, WhatsAppBotService $botService): void
     {
-        // Will be implemented when WhatsApp Cloud API is integrated
+        $messages = $whatsApp->parseWebhook($this->payload);
+
+        foreach ($messages as $message) {
+            if (empty($message['from'])) {
+                continue;
+            }
+
+            try {
+                $botService->handleIncoming($message, $this->restaurant);
+            } catch (\Exception $e) {
+                report($e);
+            }
+        }
     }
 }
