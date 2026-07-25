@@ -1,59 +1,94 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# MenuHub (MarmitaBot SaaS)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema SaaS multi-tenant para gestão de restaurantes, cardápios digitais e pedidos via WhatsApp.
 
-## About Laravel
+**Stack:** Laravel 12 + SQLite + Blade + Alpine.js + Tailwind CSS
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Funcionalidades
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Cardápio digital com envio automático via WhatsApp
+- Bot de WhatsApp para pedidos automatizados (fluxo conversacional)
+- Gestão de pedidos com Kanban (tempo real)
+- Pagamentos PIX (Mercado Pago / Asaas / Gerencianet)
+- Gestão de entregas
+- Relatórios financeiros, vendas por prato, combinações, horários de pico
+- Previsão de demanda semanal
+- Tags de clientes (segmentação)
+- Impressão térmica (58mm / 80mm)
+- Planos de assinatura (Essential, Pro, Enterprise)
+- LGPD compliance (anonimização de dados, criptografia, páginas de privacidade/termos)
+- Painel administrativo Root (gerenciar restaurantes, usuários, cobranças)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Documentação
 
-## Learning Laravel
+| Documento | Descrição |
+|---|---|
+| [Visão Geral da Arquitetura](docs/ARCHITECTURE.md) | Estrutura do sistema, camadas, padrões |
+| [Guia de Instalação](docs/INSTALLATION.md) | Setup local, Docker, variáveis de ambiente |
+| [Modelo de Dados](docs/DATABASE.md) | Esquema do banco, relacionamentos |
+| [Módulos do Sistema](docs/MODULES.md) | Funcionalidades detalhadas por módulo |
+| [Sistema de Planos](docs/PLANS.md) | Assinatura, limites, features, cobrança |
+| [WhatsApp](docs/WHATSAPP.md) | Integração WhatsApp Cloud API, bot conversacional |
+| [Pagamentos](docs/PAYMENTS.md) | Gateway de pagamentos PIX |
+| [Implantação](docs/DEPLOYMENT.md) | Deploy em produção, CI/CD, Docker |
+| [Segurança e LGPD](docs/SECURITY.md) | Privacidade, criptografia, anonimização |
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Início Rápido
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
+touch database/database.sqlite
+php artisan migrate
+php artisan db:seed
+npm run build
+php artisan serve
+```
 
-## Laravel Sponsors
+Acesse `http://localhost:8000` — login padrão: `root@menuhub.com` / `password`
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Docker (Produção)
 
-### Premium Partners
+```bash
+docker compose up -d --build
+docker compose exec app php artisan migrate --force
+docker compose exec app php artisan db:seed --force
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Testes
 
-## Contributing
+```bash
+php artisan test                  # Todos os testes
+php artisan test --parallel       # Paralelo (recomendado)
+php artisan test --coverage       # Com cobertura (xdebug)
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## CI/CD
 
-## Code of Conduct
+GitHub Actions: lint (Pint + PHPStan) → phpunit (120 testes) → frontend (ESLint + build) → docker (Buildx)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Estrutura
 
-## Security Vulnerabilities
+```
+app/
+├── Http/Controllers/     Controladores
+├── Models/                Modelos Eloquent (16)
+├── Services/              Lógica de negócio (12 serviços)
+├── Scopes/                Global scopes (multi-tenancy)
+└── Http/Middleware/       Middleware (tenant, role, subscription)
+database/
+├── migrations/            Migrations (25)
+└── seeders/               Seeds (PlanSeeder, DatabaseSeeder)
+docker/                    Nginx + Supervisor + Entrypoint
+resources/
+├── views/                 Blade views (65+)
+├── css/                   Tailwind CSS
+└── js/                    Alpine.js + Three.js + GSAP
+routes/                    web.php, auth.php, whatsapp.php
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Licença
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+MIT
