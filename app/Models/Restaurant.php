@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Restaurant extends Model
@@ -27,6 +28,10 @@ class Restaurant extends Model
         'minimum_order',
         'opening_hours',
         'is_active',
+        'plan_id',
+        'subscription_status',
+        'trial_ends_at',
+        'paid_until',
     ];
 
     protected function casts(): array
@@ -36,7 +41,19 @@ class Restaurant extends Model
             'delivery_fee' => 'decimal:2',
             'minimum_order' => 'decimal:2',
             'is_active' => 'boolean',
+            'trial_ends_at' => 'datetime',
+            'paid_until' => 'datetime',
         ];
+    }
+
+    public function plan(): BelongsTo
+    {
+        return $this->belongsTo(Plan::class);
+    }
+
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class);
     }
 
     public function users(): HasMany

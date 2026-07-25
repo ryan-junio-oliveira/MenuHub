@@ -54,6 +54,21 @@
                 <x-input-error :messages="$errors->get('notes')" class="mt-2" />
             </div>
 
+            <div>
+                <x-input-label for="tags" value="{{ __('Tags') }}" />
+                <div class="mt-1.5 grid grid-cols-2 gap-2">
+                    @foreach ($tags as $tag)
+                    <label class="flex items-center gap-2 p-2 rounded-lg border border-border dark:border-border-dark cursor-pointer hover:bg-surface dark:hover:bg-surface-dark transition-colors">
+                        <input type="checkbox" name="tags[]" value="{{ $tag->id }}" {{ in_array($tag->id, old('tags', $customer->tags->pluck('id')->toArray())) ? 'checked' : '' }} class="rounded border-border text-primary-600 focus:ring-primary-500">
+                        <span class="inline-flex items-center gap-1.5 text-xs font-medium" style="color: {{ $tag->color }}">
+                            <span class="w-2 h-2 rounded-full" style="background-color: {{ $tag->color }}"></span>
+                            {{ $tag->name }}
+                        </span>
+                    </label>
+                    @endforeach
+                </div>
+            </div>
+
             <div class="flex items-center gap-3 pt-2">
                 <x-button variant="primary" size="md" type="submit">{{ __('Atualizar Cliente') }}</x-button>
                 <x-button variant="ghost" size="md" :href="route('customers.index')">{{ __('Cancelar') }}</x-button>

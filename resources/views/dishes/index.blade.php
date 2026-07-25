@@ -32,14 +32,20 @@
             </div>
         </div>
         <div class="overflow-x-auto">
-            <x-table :headers="[__('Prato'), __('Categoria'), __('Preço'), __('Status')]" actions>
+            <x-table :headers="[__('Prato'), __('Categoria'), __('Preços'), __('Status')]" actions>
                 @forelse ($dishes ?? [] as $dish)
                 <tr class="table-row">
                     <td class="table-td">
                         <div class="flex items-center gap-3">
+                            @if ($dish->image)
+                            <div class="w-10 h-10 rounded-lg overflow-hidden shrink-0">
+                                <img src="{{ Storage::url($dish->image) }}" alt="{{ $dish->name }}" class="w-full h-full object-cover">
+                            </div>
+                            @else
                             <div class="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-500 shrink-0">
                                 <i class="fa-solid fa-utensils text-base"></i>
                             </div>
+                            @endif
                             <div>
                                 <p class="text-sm font-medium text-text-primary dark:text-text-dark">{{ $dish->name }}</p>
                                 <p class="text-xs text-text-secondary">{{ $dish->description ? Str::limit($dish->description, 40) : '-' }}</p>
@@ -47,7 +53,14 @@
                         </div>
                     </td>
                     <td class="table-td text-text-secondary">{{ $dish->category->name ?? '-' }}</td>
-                    <td class="table-td font-medium text-text-primary dark:text-text-dark">R$ {{ number_format($dish->price, 2, ',', '.') }}</td>
+                    <td class="table-td">
+                        <div class="flex gap-1.5 text-xs font-medium">
+                            @if ($dish->price_small)<span class="px-2 py-0.5 rounded bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300">P: R$ {{ number_format($dish->price_small, 2, ',', '.') }}</span>@endif
+                            @if ($dish->price_medium)<span class="px-2 py-0.5 rounded bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300">M: R$ {{ number_format($dish->price_medium, 2, ',', '.') }}</span>@endif
+                            @if ($dish->price_large)<span class="px-2 py-0.5 rounded bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300">G: R$ {{ number_format($dish->price_large, 2, ',', '.') }}</span>@endif
+                            @if (!$dish->price_small && !$dish->price_medium && !$dish->price_large)<span class="text-text-secondary">-</span>@endif
+                        </div>
+                    </td>
                     <td class="table-td">
                         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium {{ $dish->is_available ? 'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-400' }}">
                             <span class="w-1.5 h-1.5 rounded-full {{ $dish->is_available ? 'bg-green-500' : 'bg-red-500' }}"></span>

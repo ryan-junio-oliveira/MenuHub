@@ -30,6 +30,12 @@
                     <x-nav-link :href="route('customers.index')" :active="request()->routeIs('customers.*')">
                         {{ __('Customers') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('deliveries.index')" :active="request()->routeIs('deliveries.*')">
+                        {{ __('Deliveries') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('payments.index')" :active="request()->routeIs('payments.*')">
+                        {{ __('Payments') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')">
                         {{ __('Reports') }}
                     </x-nav-link>
@@ -98,6 +104,12 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('customers.index')" :active="request()->routeIs('customers.*')">
                 {{ __('Customers') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('deliveries.index')" :active="request()->routeIs('deliveries.*')">
+                {{ __('Deliveries') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('payments.index')" :active="request()->routeIs('payments.*')">
+                {{ __('Payments') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')">
                 {{ __('Reports') }}

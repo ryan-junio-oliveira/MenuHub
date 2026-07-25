@@ -8,16 +8,23 @@
             <h1 class="page-title">{{ __('Detalhes do Cliente') }}</h1>
             <p class="page-subtitle">{{ __('Perfil e histórico de pedidos') }}</p>
         </div>
-        <div class="flex items-center gap-2">
-            <x-button variant="secondary" size="sm" :href="route('customers.index')">
-                <i class="fa-solid fa-arrow-left text-sm"></i>
-                {{ __('Voltar') }}
-            </x-button>
-            <x-button variant="primary" size="sm" :href="route('customers.edit', $customer)">
-                <i class="fa-regular fa-pen-to-square text-sm"></i>
-                {{ __('Editar') }}
-            </x-button>
-        </div>
+            <div class="flex items-center gap-2">
+                <x-button variant="secondary" size="sm" :href="route('customers.index')">
+                    <i class="fa-solid fa-arrow-left text-sm"></i>
+                    {{ __('Voltar') }}
+                </x-button>
+                <x-button variant="primary" size="sm" :href="route('customers.edit', $customer)">
+                    <i class="fa-regular fa-pen-to-square text-sm"></i>
+                    {{ __('Editar') }}
+                </x-button>
+                <form method="POST" action="{{ route('customers.anonymize', $customer) }}" class="inline" onsubmit="return confirm('Tem certeza? Os dados pessoais deste cliente serão anonimizados permanentemente.')">
+                    @csrf @method('PUT')
+                    <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors border border-red-200 dark:border-red-800">
+                        <i class="fa-regular fa-eye-slash text-sm"></i>
+                        {{ __('Anonimizar Dados') }}
+                    </button>
+                </form>
+            </div>
     </div>
 
     <x-card padding="6">
@@ -61,6 +68,20 @@
                 <p class="text-sm font-medium text-text-primary dark:text-text-dark">R$ {{ number_format($customer->total_spent ?? 0, 2, ',', '.') }}</p>
             </div>
         </div>
+
+        @if ($customer->tags->isNotEmpty())
+        <div class="mb-6">
+            <p class="text-xs text-text-secondary uppercase tracking-wider mb-2">{{ __('Tags') }}</p>
+            <div class="flex items-center gap-2 flex-wrap">
+                @foreach ($customer->tags as $tag)
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style="background-color: {{ $tag->color }}20; color: {{ $tag->color }}">
+                    <span class="w-2 h-2 rounded-full" style="background-color: {{ $tag->color }}"></span>
+                    {{ $tag->name }}
+                </span>
+                @endforeach
+            </div>
+        </div>
+        @endif
 
         @if ($customer->address)
         <div class="mb-6 p-4 bg-slate-50 dark:bg-slate-800/30 rounded-xl border border-border dark:border-border-dark">

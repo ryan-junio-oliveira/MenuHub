@@ -37,11 +37,23 @@ class DashboardController extends Controller
         $totalOrders = \App\Models\Order::count();
         $totalRevenue = \App\Models\Order::where('status', 'completed')->sum('total');
 
+        $recentRestaurants = \App\Models\Restaurant::withCount('users')
+            ->latest()
+            ->limit(6)
+            ->get();
+
+        $statusCounts = \App\Models\Order::selectRaw("status, count(*) as count")
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
         return view('root.dashboard', compact(
             'restaurantCount',
             'userCount',
             'totalOrders',
-            'totalRevenue'
+            'totalRevenue',
+            'recentRestaurants',
+            'statusCounts',
         ));
     }
 }

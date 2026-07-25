@@ -32,6 +32,9 @@ class RestaurantFactory extends Factory
                 'sunday' => ['open' => '10:00', 'close' => '20:00'],
             ],
             'is_active' => true,
+            'plan_id' => \App\Models\Plan::where('slug', 'pro')->first()?->id,
+            'subscription_status' => 'active',
+            'paid_until' => now()->addMonth(),
         ];
     }
 }

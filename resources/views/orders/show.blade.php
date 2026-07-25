@@ -16,6 +16,10 @@
             <x-status-badge :status="$order->status" />
         </div>
         <div class="flex items-center gap-3">
+            <a href="{{ route('orders.edit', $order) }}" class="inline-flex items-center gap-1.5 text-sm font-medium text-text-secondary hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                <i class="fa-regular fa-pen-to-square text-sm"></i>
+                {{ __('Editar') }}
+            </a>
             <button x-on:click="printThermal()" class="inline-flex items-center gap-1.5 text-sm font-medium text-text-secondary hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
                 <i class="fa-solid fa-print text-sm"></i>
                 {{ __('Imprimir Comanda') }}

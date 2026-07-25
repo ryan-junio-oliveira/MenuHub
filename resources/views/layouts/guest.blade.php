@@ -91,14 +91,14 @@
             {{-- Mobile logo --}}
             <div class="lg:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-center py-4 bg-slate-950/90 backdrop-blur-lg border-b border-slate-800">
                 <a href="/">
-                    <x-logo dark variant="sm" />
+                    <x-logo dark class="h-10" />
                 </a>
             </div>
 
             <div class="w-full max-w-md mt-16 lg:mt-0">
                 {{-- Desktop logo hidden on mobile --}}
                 <div class="hidden lg:block mb-8">
-                    <x-logo dark variant="sm" />
+                    <x-logo dark class="h-11" />
                 </div>
 
                 <div class="auth-form-card bg-slate-900/70 backdrop-blur-xl border border-slate-800 rounded-3xl p-8 sm:p-10 shadow-2xl shadow-black/40">

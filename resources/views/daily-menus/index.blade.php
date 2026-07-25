@@ -64,6 +64,14 @@
                             <p class="text-xs text-text-secondary dark:text-slate-400 mt-0.5">{{ $menu->items_count ?? 0 }} {{ __('itens') }}</p>
                         </div>
                         <div class="flex gap-2 flex-shrink-0 ml-3">
+                            @if ($menu->is_published)
+                            <form method="POST" action="{{ route('daily-menus.dispatch', $menu) }}" class="inline">
+                                @csrf
+                                <button type="submit" class="text-xs font-medium text-green-600 dark:text-green-400 hover:text-green-500" title="{{ __('Enviar via WhatsApp') }}">
+                                    <i class="fa-brands fa-whatsapp"></i>
+                                </button>
+                            </form>
+                            @endif
                             <a href="{{ route('daily-menus.edit', $menu) }}" class="text-xs font-medium text-primary-600 dark:text-primary-400 hover:text-primary-500 dark:hover:text-primary-300">{{ __('Editar') }}</a>
                             <a href="{{ route('daily-menus.show', $menu) }}" class="text-xs font-medium text-text-secondary dark:text-slate-400 hover:text-text-primary dark:hover:text-text-dark">{{ __('Ver') }}</a>
                         </div>

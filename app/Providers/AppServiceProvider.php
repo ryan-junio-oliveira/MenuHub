@@ -17,8 +17,14 @@ use App\Models\OrderItem;
 use App\Models\Payment;
 use App\Models\Scopes\TenantScope;
 use App\Models\Setting;
+use App\Services\Contracts\GeocodingInterface;
+use App\Services\Contracts\PaymentGatewayInterface;
 use App\Services\Contracts\ThermalPrinterInterface;
+use App\Services\Contracts\WhatsAppInterface;
+use App\Services\GeocodingService;
+use App\Services\PaymentGatewayService;
 use App\Services\ThermalPrinterService;
+use App\Services\WhatsAppService;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
@@ -28,6 +34,9 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(ThermalPrinterInterface::class, ThermalPrinterService::class);
+        $this->app->bind(WhatsAppInterface::class, WhatsAppService::class);
+        $this->app->bind(PaymentGatewayInterface::class, PaymentGatewayService::class);
+        $this->app->bind(GeocodingInterface::class, GeocodingService::class);
 
         $this->app->extend('translation.loader', function ($loader, $app) {
             return new class ($loader) extends \Illuminate\Translation\FileLoader
@@ -35,7 +44,6 @@ class AppServiceProvider extends ServiceProvider
                 public function __construct(
                     private readonly \Illuminate\Translation\FileLoader $inner,
                 ) {
-                    // No parent constructor call
                 }
 
                 public function load($locale, $group, $namespace = null): array

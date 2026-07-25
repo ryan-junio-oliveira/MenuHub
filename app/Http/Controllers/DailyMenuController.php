@@ -58,7 +58,7 @@ class DailyMenuController extends Controller
             $this->dailyMenuService->syncMenuItems($menu, $items);
         }
 
-        return redirect()->route('daily-menus.index');
+        return redirect()->route('daily-menus.index')->with('success', 'Cardápio criado com sucesso!');
     }
 
     public function update(StoreDailyMenuRequest $request, DailyMenu $dailyMenu)
@@ -74,9 +74,11 @@ class DailyMenuController extends Controller
             ])->all();
 
             $this->dailyMenuService->syncMenuItems($dailyMenu, $items);
+        } else {
+            $dailyMenu->items()->delete();
         }
 
-        return redirect()->route('daily-menus.index');
+        return redirect()->route('daily-menus.index')->with('success', 'Cardápio atualizado com sucesso!');
     }
 
     public function show(DailyMenu $dailyMenu)
@@ -103,6 +105,14 @@ class DailyMenuController extends Controller
     {
         $this->dailyMenuService->publishMenu($dailyMenu);
 
-        return redirect()->route('daily-menus.index');
+        return redirect()->route('daily-menus.index')->with('success', 'Cardápio publicado com sucesso!');
+    }
+
+    public function destroy(DailyMenu $dailyMenu)
+    {
+        $dailyMenu->items()->delete();
+        $dailyMenu->delete();
+
+        return redirect()->route('daily-menus.index')->with('success', 'Cardápio excluído com sucesso!');
     }
 }

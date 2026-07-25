@@ -51,7 +51,9 @@ class DishControllerTest extends TestCase
         $response = $this->actingAs($this->user)->post(route('dishes.store'), [
             'name' => 'Frango Grelhado',
             'description' => 'Frango grelhado na chapa',
-            'price' => 25.90,
+            'price_small' => 25.90,
+            'price_medium' => 29.90,
+            'price_large' => 33.90,
             'category_id' => $this->category->id,
             'is_available' => 1,
         ]);
@@ -61,8 +63,8 @@ class DishControllerTest extends TestCase
             'restaurant_id' => $this->restaurant->id,
             'name' => 'Frango Grelhado',
             'price_small' => 25.90,
-            'price_medium' => 25.90,
-            'price_large' => 25.90,
+            'price_medium' => 29.90,
+            'price_large' => 33.90,
         ]);
     }
 
@@ -72,7 +74,7 @@ class DishControllerTest extends TestCase
             'name' => '',
         ]);
 
-        $response->assertSessionHasErrors(['name', 'price', 'category_id']);
+        $response->assertSessionHasErrors(['name', 'category_id']);
     }
 
     public function test_edit_displays_form(): void

@@ -8,7 +8,14 @@
             <h1 class="page-title">{{ __('Cardápio de') }} {{ $menu->date instanceof \Carbon\Carbon ? $menu->date->format('l, d \d\e F \d\e Y') : $menu->date }}</h1>
             <p class="page-subtitle">{{ __('Máx.') }} {{ $menu->max_selections }} {{ __('seleções por pedido') }}</p>
         </div>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-3 flex-wrap">
+            <form method="POST" action="{{ route('daily-menus.dispatch', $menu) }}" class="inline">
+                @csrf
+                <button type="submit" class="btn-primary">
+                    <i class="fa-brands fa-whatsapp text-sm"></i>
+                    {{ __('Enviar Agora') }}
+                </button>
+            </form>
             <a href="{{ route('daily-menus.edit', $menu) }}" class="btn-secondary">
                 <i class="fa-regular fa-pen-to-square text-sm"></i>
                 {{ __('Editar') }}
