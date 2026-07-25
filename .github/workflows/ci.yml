@@ -1,0 +1,124 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Code Style & Static Analysis
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, pdo_sqlite, gd, intl
+          tools: composer:v2
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist
+
+      - name: Pint (Code Style)
+        run: ./vendor/bin/pint --test
+
+      - name: PHPStan (Static Analysis)
+        run: ./vendor/bin/phpstan analyse --no-progress
+
+  phpunit:
+    runs-on: ubuntu-latest
+    name: PHPUnit Tests
+    needs: lint
+
+    services:
+      sqlite:
+        image: nouchka/sqlite3:latest
+        options: --entrypoint /bin/sh
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, pdo_sqlite, gd, intl
+          tools: composer:v2
+          coverage: none
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist
+
+      - name: Prepare environment
+        run: |
+          cp .env.example .env
+          touch database/database.sqlite
+          php artisan key:generate
+
+      - name: Run migrations
+        run: php artisan migrate --env=testing --force
+
+      - name: Run tests
+        run: php artisan test --parallel --without-tty
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
+
+  frontend:
+    runs-on: ubuntu-latest
+    name: Frontend Build
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npx eslint resources/js/ --max-warnings=10
+
+      - name: Build
+        run: npm run build
+
+  docker:
+    runs-on: ubuntu-latest
+    name: Docker Build
+    needs: [phpunit, frontend]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: menuhub:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
