@@ -9,11 +9,15 @@
     $isAdmin = $user && $user->role === 'admin';
     $isUser = $user && $user->role === 'user';
 
+    $plan = $user?->restaurant?->plan;
+
     if ($isRoot) {
         $navItems = [
             ['label' => __('Painel'), 'route' => 'root.dashboard', 'pattern' => 'root.dashboard', 'icon' => 'presentation-chart-bar'],
             ['label' => __('Restaurantes'), 'route' => 'root.restaurants.index', 'pattern' => 'root.restaurants.*', 'icon' => 'store'],
             ['label' => __('Usuários'), 'route' => 'root.users', 'pattern' => 'root.users', 'icon' => 'users'],
+            ['label' => __('Pedidos Globais'), 'route' => 'root.orders', 'pattern' => 'root.orders', 'icon' => 'shopping-cart'],
+            ['label' => __('Cobranças'), 'route' => 'root.billing.index', 'pattern' => 'root.billing.*', 'icon' => 'credit-card'],
         ];
         $bottomIcon = 'user-circle';
         $bottomLabel = __('Perfil');
@@ -27,9 +31,14 @@
             ['label' => __('Pratos'), 'route' => 'dishes.index', 'pattern' => 'dishes.*', 'icon' => 'cake'],
             ['label' => __('Categorias'), 'route' => 'dish-categories.index', 'pattern' => 'dish-categories.*', 'icon' => 'tag'],
             ['label' => __('Clientes'), 'route' => 'customers.index', 'pattern' => 'customers.*', 'icon' => 'users'],
-            ['label' => __('Relatórios'), 'route' => 'reports.index', 'pattern' => 'reports.*', 'icon' => 'chart-bar'],
+            ['label' => __('Relatórios'), 'route' => 'reports.index', 'pattern' => 'reports.*', 'icon' => 'chart-bar', 'feature' => 'reports'],
+            ['label' => __('Entregas'), 'route' => 'deliveries.index', 'pattern' => 'deliveries.*', 'icon' => 'truck', 'feature' => 'delivery_management'],
+            ['label' => __('Pagamentos'), 'route' => 'payments.index', 'pattern' => 'payments.*', 'icon' => 'credit-card'],
             ['label' => __('Configurações'), 'route' => 'settings.index', 'pattern' => 'settings.*', 'icon' => 'cog-6-tooth'],
         ];
+
+        $navItems = array_values(array_filter($navItems, fn($item) => !isset($item['feature']) || ($plan && $plan->hasFeature($item['feature']))));
+
         $bottomIcon = 'user-circle';
         $bottomLabel = __('Perfil');
         $bottomRoute = 'profile.edit';
@@ -59,6 +68,8 @@ $icons = [
     'user-circle' => '<i class="fa-solid fa-user-circle fa-fw text-xl"></i>',
     'arrow-right-on-rectangle' => '<i class="fa-solid fa-right-from-bracket fa-fw text-xl"></i>',
     'store' => '<i class="fa-solid fa-store fa-fw text-xl"></i>',
+    'credit-card' => '<i class="fa-solid fa-credit-card fa-fw text-xl"></i>',
+    'truck' => '<i class="fa-solid fa-truck fa-fw text-xl"></i>',
 ];
 @endphp
 
@@ -151,7 +162,7 @@ $icons = [
         <div
             class="flex items-center justify-between h-navbar shrink-0 border-b border-slate-800 dark:border-slate-900 px-4">
             <div class="flex items-center gap-3">
-                <x-logo dark variant="sm" />
+                <x-logo dark class="h-10" />
             </div>
             <button @click="mobileSidebarOpen = false" class="text-slate-400 hover:text-white p-1">
                 <i class="fa-solid fa-xmark w-6 h-6"></i>

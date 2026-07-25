@@ -11,7 +11,12 @@ class ReportController extends Controller
     public function __construct(
         private readonly ReportService $reportService,
         private readonly DemandPredictionService $demandPredictionService,
-    ) {}
+    ) {
+        $this->middleware(function ($request, $next) {
+            $this->authorizePlanFeature($request, 'reports');
+            return $next($request);
+        });
+    }
 
     public function index(Request $request)
     {

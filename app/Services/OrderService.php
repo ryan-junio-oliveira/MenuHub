@@ -2,15 +2,31 @@
 
 namespace App\Services;
 
+use App\Events\OrderCreated;
 use App\Events\OrderStatusChanged;
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\Restaurant;
 use Illuminate\Support\Facades\DB;
 
 class OrderService
 {
     public function createOrder(array $data, int $restaurantId): Order
     {
+        $restaurant = Restaurant::with('plan')->find($restaurantId);
+        $plan = $restaurant?->plan;
+
+        if ($plan && $plan->max_orders_monthly > 0) {
+            $monthlyOrders = Order::where('restaurant_id', $restaurantId)
+                ->whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year)
+                ->count();
+
+            if ($monthlyOrders >= $plan->max_orders_monthly) {
+                throw new \RuntimeException("Limite mensal de {$plan->max_orders_monthly} pedidos atingido para o plano {$plan->name}.");
+            }
+        }
+
         return DB::transaction(function () use ($data, $restaurantId) {
             $customerId = $data['customer_id'] ?? null;
 
@@ -60,6 +76,8 @@ class OrderService
                     'notes' => $item['notes'] ?? null,
                 ]);
             }
+
+            OrderCreated::dispatch($order);
 
             return $order;
         });
