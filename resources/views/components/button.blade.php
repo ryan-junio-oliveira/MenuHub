@@ -13,6 +13,6 @@ $variants = [
 $class = trim("$base {$sizes[$size]} {$variants[$variant]}");
 @endphp
 
-<button {{ $attributes->merge(['type' => 'button', 'class' => $class, 'disabled' => $disabled]) }}>
+<button {{ $attributes->merge(['type' => 'submit', 'class' => $class, 'disabled' => $disabled]) }}>
     {{ $slot }}
 </button>

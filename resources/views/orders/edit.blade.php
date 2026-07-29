@@ -28,24 +28,24 @@
                             <select id="customer_id" name="customer_id" class="input-field mt-1.5">
                                 <option value="">{{ __('Cliente Avulso') }}</option>
                                 @foreach (\App\Models\Customer::where('restaurant_id', $order->restaurant_id)->get() as $customer)
-                                <option value="{{ $customer->id }}" {{ $order->customer_id == $customer->id ? 'selected' : '' }}>{{ $customer->name }} - {{ $customer->phone }}</option>
+                                <option value="{{ $customer->id }}" {{ old('customer_id', $order->customer_id) == $customer->id ? 'selected' : '' }}>{{ $customer->name }} - {{ $customer->phone }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div>
                             <x-input-label for="payment_method" value="{{ __('Pagamento') }}" />
                             <select id="payment_method" name="payment_method" class="input-field mt-1.5">
-                                <option value="pix" {{ $order->payment_method === 'pix' ? 'selected' : '' }}>PIX</option>
-                                <option value="cash" {{ $order->payment_method === 'cash' ? 'selected' : '' }}>Dinheiro</option>
-                                <option value="credit_card" {{ $order->payment_method === 'credit_card' ? 'selected' : '' }}>Cartão de Crédito</option>
-                                <option value="debit_card" {{ $order->payment_method === 'debit_card' ? 'selected' : '' }}>Cartão de Débito</option>
+                                <option value="pix" {{ old('payment_method', $order->payment_method) === 'pix' ? 'selected' : '' }}>PIX</option>
+                                <option value="cash" {{ old('payment_method', $order->payment_method) === 'cash' ? 'selected' : '' }}>Dinheiro</option>
+                                <option value="credit_card" {{ old('payment_method', $order->payment_method) === 'credit_card' ? 'selected' : '' }}>Cartão de Crédito</option>
+                                <option value="debit_card" {{ old('payment_method', $order->payment_method) === 'debit_card' ? 'selected' : '' }}>Cartão de Débito</option>
                             </select>
                         </div>
                         <div>
                             <x-input-label for="delivery_type" value="{{ __('Tipo de Entrega') }}" />
                             <select id="delivery_type" name="delivery_type" class="input-field mt-1.5">
-                                <option value="delivery" {{ $order->delivery_type === 'delivery' ? 'selected' : '' }}>{{ __('Entrega') }}</option>
-                                <option value="pickup" {{ $order->delivery_type === 'pickup' ? 'selected' : '' }}>{{ __('Retirada') }}</option>
+                                <option value="delivery" {{ old('delivery_type', $order->delivery_type) === 'delivery' ? 'selected' : '' }}>{{ __('Entrega') }}</option>
+                                <option value="pickup" {{ old('delivery_type', $order->delivery_type) === 'pickup' ? 'selected' : '' }}>{{ __('Retirada') }}</option>
                             </select>
                         </div>
                     </div>

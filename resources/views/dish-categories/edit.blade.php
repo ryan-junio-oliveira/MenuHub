@@ -36,7 +36,7 @@
 
             <div class="flex items-center gap-3 pt-2">
                 <x-button variant="primary" size="md" type="submit">{{ __('Atualizar Categoria') }}</x-button>
-                <x-button variant="ghost" size="md" :href="route('dish-categories.index')">{{ __('Cancelar') }}</x-button>
+                <x-button variant="ghost" size="md" type="button" :href="route('dish-categories.index')">{{ __('Cancelar') }}</x-button>
             </div>
         </form>
     </x-card>

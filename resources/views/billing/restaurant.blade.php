@@ -258,7 +258,7 @@
                 </div>
                 <div>
                     <label class="text-xs text-text-secondary block mb-1">Observações (opcional)</label>
-                    <textarea name="notes" rows="2" class="input-field text-sm" placeholder="Observações internas..."></textarea>
+                    <textarea name="notes" rows="2" class="input-field text-sm" placeholder="Observações internas...">{{ old('notes') }}</textarea>
                 </div>
             </div>
             <div class="mt-6 flex items-center gap-3 justify-end">

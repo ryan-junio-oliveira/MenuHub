@@ -20,7 +20,7 @@
                     <select id="order_id" name="order_id" class="input-field mt-1.5" required>
                         <option value="">{{ __('Selecione um pedido') }}</option>
                         @foreach ($orders as $order)
-                        <option value="{{ $order->id }}" {{ $selectedOrder?->id == $order->id ? 'selected' : '' }}>
+                        <option value="{{ $order->id }}" {{ old('order_id', $selectedOrder?->id) == $order->id ? 'selected' : '' }}>
                             #{{ $order->order_number }} - {{ $order->customer?->name ?? 'Avulso' }} - R$ {{ number_format($order->total, 2, ',', '.') }}
                         </option>
                         @endforeach
@@ -31,8 +31,8 @@
                 <div>
                     <x-input-label for="type" value="{{ __('Tipo') }}" />
                     <select id="type" name="type" class="input-field mt-1.5" required>
-                        <option value="delivery">{{ __('Entrega') }}</option>
-                        <option value="pickup">{{ __('Retirada') }}</option>
+                        <option value="delivery" {{ old('type', $delivery->type ?? '') === 'delivery' ? 'selected' : '' }}>{{ __('Entrega') }}</option>
+                        <option value="pickup" {{ old('type', $delivery->type ?? '') === 'pickup' ? 'selected' : '' }}>{{ __('Retirada') }}</option>
                     </select>
                 </div>
                 @else

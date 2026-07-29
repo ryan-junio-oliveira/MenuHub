@@ -45,21 +45,27 @@
                 />
 
                 <main class="p-6 lg:p-8">
-                    @if(session('success'))
-                        <x-alert type="success" :message="session('success')" dismissible class="mb-6" />
-                    @endif
-                    @if(session('error'))
-                        <x-alert type="error" :message="session('error')" dismissible class="mb-6" />
-                    @endif
-                    @if(session('warning'))
-                        <x-alert type="warning" :message="session('warning')" dismissible class="mb-6" />
-                    @endif
-                    @if(session('info'))
-                        <x-alert type="info" :message="session('info')" dismissible class="mb-6" />
-                    @endif
 
                     @yield('content')
                 </main>
+            </div>
+        </div>
+
+        {{-- Toast notifications — fixed top-right, auto-dismiss 10s --}}
+        <div class="fixed top-4 right-4 z-[9999] flex flex-col gap-3 w-full max-w-sm pointer-events-none">
+            <div class="pointer-events-auto space-y-3">
+                @if(session('success'))
+                    <x-toast type="success" :message="session('success')" />
+                @endif
+                @if(session('error'))
+                    <x-toast type="error" :message="session('error')" />
+                @endif
+                @if(session('warning'))
+                    <x-toast type="warning" :message="session('warning')" />
+                @endif
+                @if(session('info'))
+                    <x-toast type="info" :message="session('info')" />
+                @endif
             </div>
         </div>
 
