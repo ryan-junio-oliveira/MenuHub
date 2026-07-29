@@ -18,19 +18,19 @@
             <div class="space-y-6">
                 <div>
                     <x-input-label for="name" value="Nome" />
-                    <x-text-input id="name" name="name" type="text" class="mt-1 block w-full input-field" :value="old('name', $user->name ?? '')" required />
+                    <x-text-input id="name" name="name" type="text" placeholder="Nome do usuário" class="mt-1 block w-full input-field" :value="old('name', $user->name ?? '')" required />
                     <x-input-error :messages="$errors->get('name')" class="mt-2" />
                 </div>
 
                 <div>
                     <x-input-label for="email" value="E-mail" />
-                    <x-text-input id="email" name="email" type="email" class="mt-1 block w-full input-field" :value="old('email', $user->email ?? '')" required />
+                    <x-text-input id="email" name="email" type="email" placeholder="E-mail do usuário" class="mt-1 block w-full input-field" :value="old('email', $user->email ?? '')" required />
                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
 
                 <div>
                     <x-input-label for="password" value="{{ $user ? 'Nova Senha (deixe em branco para manter)' : 'Senha' }}" />
-                    <x-text-input id="password" name="password" type="password" class="mt-1 block w-full input-field" />
+                    <x-text-input id="password" name="password" type="password" placeholder="Senha do usuário" class="mt-1 block w-full input-field" />
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
 

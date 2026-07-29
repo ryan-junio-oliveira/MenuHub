@@ -23,7 +23,7 @@
 
                 <div>
                     <x-input-label for="address" value="{{ __('Endereço') }}" />
-                    <textarea id="address" name="address" rows="3" class="input-field mt-1">{{ old('address') }}</textarea>
+                    <textarea id="address" name="address" rows="3" placeholder="Endereço do restaurante" class="input-field mt-1">{{ old('address') }}</textarea>
                     <x-input-error :messages="$errors->get('address')" class="mt-2" />
                 </div>
 

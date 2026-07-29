@@ -24,6 +24,7 @@ use App\Services\Contracts\WhatsAppInterface;
 use App\Services\GeocodingService;
 use App\Services\PaymentGatewayService;
 use App\Services\ThermalPrinterService;
+use App\Services\MockWhatsAppService;
 use App\Services\WhatsAppService;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Event;
@@ -34,7 +35,12 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(ThermalPrinterInterface::class, ThermalPrinterService::class);
-        $this->app->bind(WhatsAppInterface::class, WhatsAppService::class);
+
+        $whatsAppService = app()->environment('local', 'testing')
+            ? MockWhatsAppService::class
+            : WhatsAppService::class;
+        $this->app->bind(WhatsAppInterface::class, $whatsAppService);
+
         $this->app->bind(PaymentGatewayInterface::class, PaymentGatewayService::class);
         $this->app->bind(GeocodingInterface::class, GeocodingService::class);
 

@@ -24,6 +24,12 @@
             </div>
         </div>
         <div class="flex items-center gap-2">
+            @if ($restaurant->setup_token && !$restaurant->isSetupComplete())
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
+                <span class="w-1.5 h-1.5 rounded-full mr-1.5 bg-amber-500"></span>
+                {{ __('Convite Pendente') }}
+            </span>
+            @endif
             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium {{ $restaurant->is_active ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' }}">
                 <span class="w-1.5 h-1.5 rounded-full mr-1.5 {{ $restaurant->is_active ? 'bg-green-500' : 'bg-red-500' }}"></span>
                 {{ $restaurant->is_active ? __('Ativo') : __('Inativo') }}
@@ -98,9 +104,30 @@
                         <p class="text-sm font-medium">{{ $restaurant->whatsapp_phone_id ? 'Configurado' : 'Não configurado' }}</p>
                     </div>
                     <div>
+                        <p class="text-xs text-text-secondary uppercase tracking-wider mb-1">{{ __('Razão Social') }}</p>
+                        <p class="text-sm font-medium">{{ $restaurant->razao_social ?? '-' }}</p>
+                    </div>
+                    <div>
                         <p class="text-xs text-text-secondary uppercase tracking-wider mb-1">{{ __('Cadastro') }}</p>
                         <p class="text-sm font-medium">{{ $restaurant->created_at->format('d/m/Y H:i') }}</p>
                     </div>
+                    @if (!$restaurant->isSetupComplete())
+                    <div>
+                        <p class="text-xs text-text-secondary uppercase tracking-wider mb-1">{{ __('Setup') }}</p>
+                        <p class="text-sm font-medium text-amber-600 dark:text-amber-400">
+                            <i class="fa-regular fa-clock mr-1"></i>
+                            Aguardando admin completar cadastro
+                        </p>
+                    </div>
+                    @else
+                    <div>
+                        <p class="text-xs text-text-secondary uppercase tracking-wider mb-1">{{ __('Setup Completo') }}</p>
+                        <p class="text-sm font-medium text-green-600 dark:text-green-400">
+                            <i class="fa-regular fa-circle-check mr-1"></i>
+                            {{ $restaurant->setup_completed_at->format('d/m/Y H:i') }}
+                        </p>
+                    </div>
+                    @endif
                 </div>
                 @if ($restaurant->cover)
                 <div class="mt-4">

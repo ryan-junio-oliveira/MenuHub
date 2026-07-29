@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Restaurant extends Model
 {
@@ -13,6 +14,7 @@ class Restaurant extends Model
 
     protected $fillable = [
         'name',
+        'razao_social',
         'slug',
         'email',
         'phone',
@@ -32,6 +34,8 @@ class Restaurant extends Model
         'subscription_status',
         'trial_ends_at',
         'paid_until',
+        'setup_token',
+        'setup_completed_at',
     ];
 
     protected function casts(): array
@@ -43,7 +47,25 @@ class Restaurant extends Model
             'is_active' => 'boolean',
             'trial_ends_at' => 'datetime',
             'paid_until' => 'datetime',
+            'setup_completed_at' => 'datetime',
         ];
+    }
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function (Restaurant $restaurant) {
+            if (!$restaurant->slug) {
+                $base = Str::slug($restaurant->name ?: $restaurant->razao_social ?: 'restaurante');
+                $slug = $base;
+                $counter = 1;
+                while (static::where('slug', $slug)->exists()) {
+                    $slug = $base . '-' . $counter++;
+                }
+                $restaurant->slug = $slug;
+            }
+        });
     }
 
     public function plan(): BelongsTo
@@ -99,5 +121,15 @@ class Restaurant extends Model
     public function settings(): HasMany
     {
         return $this->hasMany(Setting::class);
+    }
+
+    public function isSetupComplete(): bool
+    {
+        return $this->setup_completed_at !== null;
+    }
+
+    public function adminUser(): ?User
+    {
+        return $this->users()->where('role', 'admin')->first();
     }
 }

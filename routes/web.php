@@ -33,6 +33,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('root.')
         ->group(function () {
             Route::get('/dashboard', [DashboardController::class, 'rootIndex'])->name('dashboard');
+            Route::get('/restaurants/create', [RestaurantController::class, 'rootCreate'])->name('restaurants.create');
+            Route::post('/restaurants', [RestaurantController::class, 'rootStore'])->name('restaurants.store');
             Route::resource('restaurants', RestaurantController::class)->except(['create', 'store']);
             Route::put('/restaurants/{restaurant}/toggle-active', [RestaurantController::class, 'toggleActive'])->name('restaurants.toggle-active');
             Route::get('/orders', [OrderController::class, 'globalIndex'])->name('orders');
@@ -114,6 +116,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::get('/setup/{token}', [\App\Http\Controllers\SetupController::class, 'show'])->name('setup.show');
+Route::post('/setup/{token}', [\App\Http\Controllers\SetupController::class, 'complete'])->name('setup.complete');
 
 Route::get('/restaurant/create', function () {
     return redirect()->route('home')->with('info', 'Contact the system administrator to register your restaurant.');

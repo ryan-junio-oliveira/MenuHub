@@ -43,18 +43,18 @@
 
                 <div>
                     <x-input-label for="address" value="{{ __('Endereço') }}" />
-                    <textarea id="address" name="address" rows="2" class="input-field mt-1.5 min-h-[60px]">{{ old('address', $delivery->address ?? '') }}</textarea>
+                    <textarea id="address" name="address" rows="2" placeholder="Endereço de entrega" class="input-field mt-1.5 min-h-[60px]">{{ old('address', $delivery->address ?? '') }}</textarea>
                     <x-input-error :messages="$errors->get('address')" class="mt-2" />
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <x-input-label for="contact_name" value="{{ __('Nome do Contato') }}" />
-                        <x-text-input id="contact_name" name="contact_name" type="text" class="mt-1.5 block w-full input-field" :value="old('contact_name', $delivery->contact_name ?? '')" />
+                        <x-text-input id="contact_name" name="contact_name" type="text" placeholder="Nome do contato" class="mt-1.5 block w-full input-field" :value="old('contact_name', $delivery->contact_name ?? '')" />
                     </div>
                     <div>
                         <x-input-label for="contact_phone" value="{{ __('Telefone') }}" />
-                        <x-text-input id="contact_phone" name="contact_phone" type="text" class="mt-1.5 block w-full input-field" :value="old('contact_phone', $delivery->contact_phone ?? '')" />
+                        <x-text-input id="contact_phone" name="contact_phone" type="text" placeholder="Telefone do contato" class="mt-1.5 block w-full input-field" :value="old('contact_phone', $delivery->contact_phone ?? '')" />
                     </div>
                 </div>
 
@@ -70,20 +70,20 @@
                     </div>
                     <div>
                         <x-input-label for="estimated_delivery_at" value="{{ __('Previsão de Entrega') }}" />
-                        <x-text-input id="estimated_delivery_at" name="estimated_delivery_at" type="datetime-local" class="mt-1.5 block w-full input-field" :value="old('estimated_delivery_at', $delivery?->estimated_delivery_at?->format('Y-m-d\TH:i'))" />
+                        <x-text-input id="estimated_delivery_at" name="estimated_delivery_at" type="datetime-local" placeholder="Data prevista" class="mt-1.5 block w-full input-field" :value="old('estimated_delivery_at', $delivery?->estimated_delivery_at?->format('Y-m-d\TH:i'))" />
                     </div>
                 </div>
 
                 @if ($delivery)
                 <div>
                     <x-input-label for="delivered_at" value="{{ __('Entregue em') }}" />
-                    <x-text-input id="delivered_at" name="delivered_at" type="datetime-local" class="mt-1.5 block w-full input-field" :value="old('delivered_at', $delivery?->delivered_at?->format('Y-m-d\TH:i'))" />
+                    <x-text-input id="delivered_at" name="delivered_at" type="datetime-local" placeholder="Data da entrega" class="mt-1.5 block w-full input-field" :value="old('delivered_at', $delivery?->delivered_at?->format('Y-m-d\TH:i'))" />
                 </div>
                 @endif
 
                 <div>
                     <x-input-label for="notes" value="{{ __('Observações') }}" />
-                    <textarea id="notes" name="notes" rows="3" class="input-field mt-1.5 min-h-[80px]">{{ old('notes', $delivery->notes ?? '') }}</textarea>
+                    <textarea id="notes" name="notes" rows="3" placeholder="Observações da entrega" class="input-field mt-1.5 min-h-[80px]">{{ old('notes', $delivery->notes ?? '') }}</textarea>
                 </div>
             </div>
 

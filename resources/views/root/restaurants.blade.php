@@ -8,6 +8,10 @@
             <h1 class="page-title">Restaurantes</h1>
             <p class="page-subtitle">Gerenciar restaurantes cadastrados no sistema</p>
         </div>
+        <a href="{{ route('root.restaurants.create') }}" class="btn-primary text-sm">
+            <i class="fa-solid fa-plus text-xs"></i>
+            Novo Restaurante
+        </a>
     </div>
 
     @php

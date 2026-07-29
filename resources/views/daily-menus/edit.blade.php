@@ -18,12 +18,12 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <x-input-label for="date" value="{{ __('Data do Cardápio') }}" />
-                            <x-text-input id="date" name="date" type="date" class="mt-1.5 block w-full input-field" :value="old('date', $menu->date->format('Y-m-d'))" required />
+                            <x-text-input id="date" name="date" type="date" placeholder="Selecione a data" class="mt-1.5 block w-full input-field" :value="old('date', $menu->date->format('Y-m-d'))" required />
                             <x-input-error :messages="$errors->get('date')" class="mt-2" />
                         </div>
                         <div>
                             <x-input-label for="max_selections" value="{{ __('Máx. Seleções por Pedido') }}" />
-                            <x-text-input id="max_selections" name="max_selections" type="number" class="mt-1.5 block w-full input-field" :value="old('max_selections', $menu->max_selections)" required />
+                            <x-text-input id="max_selections" name="max_selections" type="number" placeholder="Limite de seleções" class="mt-1.5 block w-full input-field" :value="old('max_selections', $menu->max_selections)" required />
                             <x-input-error :messages="$errors->get('max_selections')" class="mt-2" />
                         </div>
                     </div>

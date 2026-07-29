@@ -49,27 +49,27 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <x-input-label for="name" value="{{ __('Nome do Restaurante') }}" />
-                        <x-text-input id="name" name="name" type="text" class="mt-1 block w-full input-field" :value="old('name', $settings->name ?? '')" required />
+                        <x-text-input id="name" name="name" type="text" placeholder="Nome do restaurante" class="mt-1 block w-full input-field" :value="old('name', $settings->name ?? '')" required />
                         <x-input-error :messages="$errors->get('name')" class="mt-2" />
                     </div>
                     <div>
                         <x-input-label for="email" value="{{ __('E-mail') }}" />
-                        <x-text-input id="email" name="email" type="email" class="mt-1 block w-full input-field" :value="old('email', $settings->email ?? '')" required />
+                        <x-text-input id="email" name="email" type="email" placeholder="E-mail do restaurante" class="mt-1 block w-full input-field" :value="old('email', $settings->email ?? '')" required />
                         <x-input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>
                     <div>
                         <x-input-label for="phone" value="{{ __('Telefone') }}" />
-                        <x-text-input id="phone" name="phone" type="text" class="mt-1 block w-full input-field" :value="old('phone', $settings->phone ?? '')" required />
+                        <x-text-input id="phone" name="phone" type="text" placeholder="Telefone do restaurante" class="mt-1 block w-full input-field" :value="old('phone', $settings->phone ?? '')" required />
                         <x-input-error :messages="$errors->get('phone')" class="mt-2" />
                     </div>
                     <div>
                         <x-input-label for="cnpj" value="{{ __('CNPJ') }}" />
-                        <x-text-input id="cnpj" name="cnpj" type="text" class="mt-1 block w-full input-field" :value="old('cnpj', $settings->cnpj ?? '')" />
+                        <x-text-input id="cnpj" name="cnpj" type="text" placeholder="CNPJ do restaurante" class="mt-1 block w-full input-field" :value="old('cnpj', $settings->cnpj ?? '')" />
                         <x-input-error :messages="$errors->get('cnpj')" class="mt-2" />
                     </div>
                     <div class="md:col-span-2">
                         <x-input-label for="address" value="{{ __('Endereço') }}" />
-                        <textarea id="address" name="address" rows="3" class="mt-1 block w-full input-field min-h-[80px]">{{ old('address', $settings->address ?? '') }}</textarea>
+                        <textarea id="address" name="address" rows="3" placeholder="Endereço do restaurante" class="mt-1 block w-full input-field min-h-[80px]">{{ old('address', $settings->address ?? '') }}</textarea>
                         <x-input-error :messages="$errors->get('address')" class="mt-2" />
                     </div>
                 </div>
@@ -144,23 +144,23 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <x-input-label for="delivery_fee" value="{{ __('Taxa de Entrega (R$)') }}" />
-                        <x-text-input id="delivery_fee" name="delivery_fee" type="number" step="0.01" class="mt-1 block w-full input-field" :value="old('delivery_fee', $settings->delivery_fee ?? '')" />
+                        <x-text-input id="delivery_fee" name="delivery_fee" type="number" step="0.01" placeholder="Taxa de entrega" class="mt-1 block w-full input-field" :value="old('delivery_fee', $settings->delivery_fee ?? '')" />
                         <x-input-error :messages="$errors->get('delivery_fee')" class="mt-2" />
                     </div>
                     <div>
                         <x-input-label for="free_delivery_min" value="{{ __('Mín. para Entrega Grátis (R$)') }}" />
-                        <x-text-input id="free_delivery_min" name="free_delivery_min" type="number" step="0.01" class="mt-1 block w-full input-field" :value="old('free_delivery_min', $settings->free_delivery_min ?? '')" />
+                        <x-text-input id="free_delivery_min" name="free_delivery_min" type="number" step="0.01" placeholder="Valor mínimo" class="mt-1 block w-full input-field" :value="old('free_delivery_min', $settings->free_delivery_min ?? '')" />
                         <p class="mt-1 text-xs text-text-secondary dark:text-slate-400">{{ __('Pedidos acima deste valor têm entrega grátis.') }}</p>
                         <x-input-error :messages="$errors->get('free_delivery_min')" class="mt-2" />
                     </div>
                     <div>
                         <x-input-label for="delivery_radius" value="{{ __('Raio de Entrega (km)') }}" />
-                        <x-text-input id="delivery_radius" name="delivery_radius" type="number" step="0.1" class="mt-1 block w-full input-field" :value="old('delivery_radius', $settings->delivery_radius ?? '')" />
+                        <x-text-input id="delivery_radius" name="delivery_radius" type="number" step="0.1" placeholder="Raio em km" class="mt-1 block w-full input-field" :value="old('delivery_radius', $settings->delivery_radius ?? '')" />
                         <x-input-error :messages="$errors->get('delivery_radius')" class="mt-2" />
                     </div>
                     <div>
                         <x-input-label for="estimated_delivery_time" value="{{ __('Tempo Estimado (min)') }}" />
-                        <x-text-input id="estimated_delivery_time" name="estimated_delivery_time" type="number" class="mt-1 block w-full input-field" :value="old('estimated_delivery_time', $settings->estimated_delivery_time ?? '')" />
+                        <x-text-input id="estimated_delivery_time" name="estimated_delivery_time" type="number" placeholder="Tempo em minutos" class="mt-1 block w-full input-field" :value="old('estimated_delivery_time', $settings->estimated_delivery_time ?? '')" />
                         <x-input-error :messages="$errors->get('estimated_delivery_time')" class="mt-2" />
                     </div>
                 </div>

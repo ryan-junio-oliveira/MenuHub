@@ -80,7 +80,7 @@
 
             <div>
                 <x-input-label for="max_selections" value="{{ __('Limite de Escolhas por Pedido') }}" />
-                <x-text-input id="max_selections" name="max_selections" type="number" class="mt-1 block w-full input-field" :value="old('max_selections', 1)" />
+                <x-text-input id="max_selections" name="max_selections" type="number" placeholder="Limite de escolhas" class="mt-1 block w-full input-field" :value="old('max_selections', 1)" />
                 <x-input-error :messages="$errors->get('max_selections')" class="mt-2" />
             </div>
 

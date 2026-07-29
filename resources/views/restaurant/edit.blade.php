@@ -29,7 +29,7 @@
 
                     <div class="md:col-span-2">
                         <x-input-label for="address" value="{{ __('Endereço') }}" />
-                        <textarea id="address" name="address" rows="3" class="input-field mt-1">{{ old('address', $restaurant->address) }}</textarea>
+                        <textarea id="address" name="address" rows="3" placeholder="Endereço do restaurante" class="input-field mt-1">{{ old('address', $restaurant->address) }}</textarea>
                         <x-input-error :messages="$errors->get('address')" class="mt-2" />
                     </div>
 
@@ -66,17 +66,25 @@
                     </div>
                 </div>
 
-                @if ($restaurant->whatsapp_phone_id || $restaurant->whatsapp_api_token)
+                @if ($restaurant->whatsapp_phone_id || $restaurant->whatsapp_api_token || app()->environment('local'))
                 <div class="border-t border-border dark:border-border-dark pt-6">
                     <p class="text-sm font-semibold text-text-primary dark:text-text-dark mb-4">{{ __('WhatsApp API') }}</p>
+                    @if (app()->environment('local'))
+                    <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mb-4">
+                        <p class="text-xs text-blue-700 dark:text-blue-300">
+                            <i class="fa-solid fa-info-circle mr-1"></i>
+                            {{ __('Modo de desenvolvimento: usando MockWhatsAppService. As mensagens serão logadas no console/laravel.log em vez de enviadas via API real.') }}
+                        </p>
+                    </div>
+                    @endif
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <x-input-label for="whatsapp_phone_id" value="{{ __('Phone ID') }}" />
-                            <x-text-input id="whatsapp_phone_id" name="whatsapp_phone_id" type="text" class="mt-1 block w-full input-field" :value="old('whatsapp_phone_id', $restaurant->whatsapp_phone_id)" />
+                            <x-text-input id="whatsapp_phone_id" name="whatsapp_phone_id" type="text" placeholder="ID do telefone empresarial" class="mt-1 block w-full input-field" :value="old('whatsapp_phone_id', $restaurant->whatsapp_phone_id)" />
                         </div>
                         <div>
                             <x-input-label for="whatsapp_api_token" value="{{ __('API Token') }}" />
-                            <x-text-input id="whatsapp_api_token" name="whatsapp_api_token" type="password" class="mt-1 block w-full input-field" :value="old('whatsapp_api_token', $restaurant->whatsapp_api_token ? '********' : '')" />
+                            <x-text-input id="whatsapp_api_token" name="whatsapp_api_token" type="password" placeholder="Token de acesso da API" class="mt-1 block w-full input-field" :value="old('whatsapp_api_token', $restaurant->whatsapp_api_token ? '********' : '')" />
                         </div>
                     </div>
                 </div>

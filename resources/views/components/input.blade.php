@@ -1,5 +1,12 @@
 @props(['label', 'name', 'type' => 'text', 'placeholder' => '', 'value' => '', 'error' => null, 'required' => false, 'disabled' => false])
 
+@php
+    if (empty($placeholder) && isset($label)) {
+        $cleanLabel = preg_replace('/\s*\([^)]*\)\s*/u', '', $label);
+        $placeholder = 'Insira ' . mb_strtolower(trim($cleanLabel));
+    }
+@endphp
+
 <div>
     @if($label ?? false)
         <x-input-label for="{{ $name }}" :value="$label" />

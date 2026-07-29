@@ -51,11 +51,11 @@
                     </div>
                     <div class="mt-4">
                         <x-input-label for="delivery_address" value="{{ __('Endereço de Entrega') }}" />
-                        <textarea id="delivery_address" name="delivery_address" rows="2" class="input-field mt-1.5 min-h-[60px]">{{ old('delivery_address', $order->delivery_address) }}</textarea>
+                        <textarea id="delivery_address" name="delivery_address" rows="2" placeholder="Endereço de entrega" class="input-field mt-1.5 min-h-[60px]">{{ old('delivery_address', $order->delivery_address) }}</textarea>
                     </div>
                     <div class="mt-4">
                         <x-input-label for="notes" value="{{ __('Observações') }}" />
-                        <textarea id="notes" name="notes" rows="2" class="input-field mt-1.5 min-h-[60px]">{{ old('notes', $order->notes) }}</textarea>
+                        <textarea id="notes" name="notes" rows="2" placeholder="Observações do pedido" class="input-field mt-1.5 min-h-[60px]">{{ old('notes', $order->notes) }}</textarea>
                     </div>
                 </x-card>
 
@@ -92,19 +92,19 @@
                     <div class="space-y-3">
                         <div>
                             <x-input-label for="subtotal" value="{{ __('Subtotal (R$)') }}" />
-                            <x-text-input id="subtotal" name="subtotal" type="number" step="0.01" class="mt-1 block w-full input-field" :value="old('subtotal', $order->subtotal)" />
+                            <x-text-input id="subtotal" name="subtotal" type="number" step="0.01" placeholder="Valor do subtotal" class="mt-1 block w-full input-field" :value="old('subtotal', $order->subtotal)" />
                         </div>
                         <div>
                             <x-input-label for="delivery_fee" value="{{ __('Taxa de Entrega (R$)') }}" />
-                            <x-text-input id="delivery_fee" name="delivery_fee" type="number" step="0.01" class="mt-1 block w-full input-field" :value="old('delivery_fee', $order->delivery_fee)" />
+                            <x-text-input id="delivery_fee" name="delivery_fee" type="number" step="0.01" placeholder="Valor da taxa" class="mt-1 block w-full input-field" :value="old('delivery_fee', $order->delivery_fee)" />
                         </div>
                         <div>
                             <x-input-label for="discount" value="{{ __('Desconto (R$)') }}" />
-                            <x-text-input id="discount" name="discount" type="number" step="0.01" class="mt-1 block w-full input-field" :value="old('discount', $order->discount)" />
+                            <x-text-input id="discount" name="discount" type="number" step="0.01" placeholder="Valor do desconto" class="mt-1 block w-full input-field" :value="old('discount', $order->discount)" />
                         </div>
                         <div>
                             <x-input-label for="total" value="{{ __('Total (R$)') }}" />
-                            <x-text-input id="total" name="total" type="number" step="0.01" class="mt-1 block w-full input-field" :value="old('total', $order->total)" />
+                            <x-text-input id="total" name="total" type="number" step="0.01" placeholder="Valor total" class="mt-1 block w-full input-field" :value="old('total', $order->total)" />
                         </div>
                     </div>
                     <div class="mt-6">

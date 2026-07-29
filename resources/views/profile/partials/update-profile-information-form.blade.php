@@ -11,13 +11,13 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
                 <x-input-label for="name" value="Nome" />
-                <x-text-input id="name" name="name" type="text" class="mt-1 block w-full input-field" :value="old('name', $user->name)" required autofocus autocomplete="name" />
+                <x-text-input id="name" name="name" type="text" placeholder="Seu nome completo" class="mt-1 block w-full input-field" :value="old('name', $user->name)" required autofocus autocomplete="name" />
                 <x-input-error class="mt-2" :messages="$errors->get('name')" />
             </div>
 
             <div>
                 <x-input-label for="email" value="E-mail" />
-                <x-text-input id="email" name="email" type="email" class="mt-1 block w-full input-field" :value="old('email', $user->email)" required autocomplete="username" />
+                <x-text-input id="email" name="email" type="email" placeholder="Seu e-mail" class="mt-1 block w-full input-field" :value="old('email', $user->email)" required autocomplete="username" />
                 <x-input-error class="mt-2" :messages="$errors->get('email')" />
             </div>
         </div>

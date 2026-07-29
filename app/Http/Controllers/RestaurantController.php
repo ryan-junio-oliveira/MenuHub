@@ -4,11 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRestaurantRequest;
 use App\Http\Requests\UpdateRestaurantSettingsRequest;
+use App\Mail\RestaurantInvitation;
 use App\Models\Order;
 use App\Models\Restaurant;
+use App\Models\User;
 use App\Services\SettingService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class RestaurantController extends Controller
 {
@@ -21,6 +27,52 @@ class RestaurantController extends Controller
         $restaurants = Restaurant::withCount(['users', 'orders'])->orderBy('name')->get();
 
         return view('root.restaurants', compact('restaurants'));
+    }
+
+    public function rootCreate()
+    {
+        return view('root.restaurants-create');
+    }
+
+    public function rootStore(Request $request)
+    {
+        $validated = $request->validate([
+            'razao_social' => ['required', 'string', 'max:255'],
+            'admin_name' => ['required', 'string', 'max:255'],
+            'admin_email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
+        ]);
+
+        $setupToken = Str::random(64);
+
+        $restaurant = DB::transaction(function () use ($validated, $setupToken) {
+            $restaurant = Restaurant::create([
+                'name' => $validated['razao_social'],
+                'razao_social' => $validated['razao_social'],
+                'email' => $validated['admin_email'],
+                'is_active' => false,
+                'subscription_status' => 'trial',
+                'trial_ends_at' => now()->addDays(30),
+                'setup_token' => $setupToken,
+            ]);
+
+            User::create([
+                'name' => $validated['admin_name'],
+                'email' => $validated['admin_email'],
+                'password' => Hash::make(Str::random(32)),
+                'role' => 'admin',
+                'restaurant_id' => $restaurant->id,
+            ]);
+
+            return $restaurant;
+        });
+
+        $admin = $restaurant->adminUser();
+        $setupUrl = route('setup.show', $setupToken);
+
+        Mail::to($admin->email)->send(new RestaurantInvitation($restaurant, $admin, $setupUrl));
+
+        return redirect()->route('root.restaurants.index')
+            ->with('success', "Restaurante '{$restaurant->razao_social}' criado! Um convite foi enviado para <strong>{$admin->email}</strong>.");
     }
 
     public function create()

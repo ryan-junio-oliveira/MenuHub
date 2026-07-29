@@ -25,6 +25,8 @@ class UpdateRestaurantSettingsRequest extends FormRequest
             'opening_hours' => ['sometimes', 'nullable', 'json'],
             'logo' => ['sometimes', 'nullable', 'image', 'max:2048'],
             'cover' => ['sometimes', 'nullable', 'image', 'max:2048'],
+            'whatsapp_phone_id' => ['sometimes', 'nullable', 'string'],
+            'whatsapp_api_token' => ['sometimes', 'nullable', 'string'],
         ];
     }
 }
