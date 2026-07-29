@@ -99,6 +99,12 @@
                                         <i class="fa-solid fa-{{ $restaurant->is_active ? 'pause' : 'play' }} text-sm"></i>
                                     </button>
                                 </form>
+                                <form method="POST" action="{{ route('root.restaurants.destroy', $restaurant) }}" class="inline" onsubmit="return confirm('Tem certeza que deseja excluir este restaurante? Todas as operacoes associadas serao removidas.')">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="inline-flex items-center justify-center w-8 h-8 rounded-lg text-text-secondary hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors" title="Excluir">
+                                        <i class="fa-solid fa-trash-can text-sm"></i>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>

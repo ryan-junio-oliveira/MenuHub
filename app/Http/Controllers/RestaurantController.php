@@ -5,8 +5,16 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRestaurantRequest;
 use App\Http\Requests\UpdateRestaurantSettingsRequest;
 use App\Mail\RestaurantInvitation;
+use App\Models\Customer;
+use App\Models\DailyMenu;
+use App\Models\Delivery;
+use App\Models\Dish;
+use App\Models\DishCategory;
+use App\Models\Invoice;
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\Restaurant;
+use App\Models\Setting;
 use App\Models\User;
 use App\Services\SettingService;
 use Illuminate\Http\Request;
@@ -167,5 +175,44 @@ class RestaurantController extends Controller
                 ? 'Restaurante ativado com sucesso!'
                 : 'Restaurante desativado com sucesso!'
         );
+    }
+
+    public function destroy(Restaurant $restaurant)
+    {
+        DB::transaction(function () use ($restaurant) {
+            if ($restaurant->logo) {
+                Storage::disk('public')->delete($restaurant->logo);
+            }
+            if ($restaurant->cover) {
+                Storage::disk('public')->delete($restaurant->cover);
+            }
+
+            $restaurant->users()->each(fn(User $user) => $user->delete());
+
+            $restaurant->customers()->each(function (Customer $customer) {
+                $customer->tags()->detach();
+                $customer->orders()->each(fn(Order $order) => $order->items()->delete());
+                $customer->orders()->delete();
+                $customer->delete();
+            });
+
+            $restaurant->orders()->each(fn(Order $order) => $order->items()->delete());
+            $restaurant->orders()->delete();
+
+            $restaurant->dailyMenus()->each(fn(DailyMenu $menu) => $menu->items()->delete());
+            $restaurant->dailyMenus()->delete();
+
+            $restaurant->dishes()->delete();
+            $restaurant->dishCategories()->delete();
+            $restaurant->deliveries()->delete();
+            $restaurant->payments()->delete();
+            $restaurant->settings()->delete();
+            $restaurant->invoices()->delete();
+
+            $restaurant->delete();
+        });
+
+        return redirect()->route('root.restaurants.index')
+            ->with('success', 'Restaurante excluído com sucesso!');
     }
 }

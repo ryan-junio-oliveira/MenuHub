@@ -40,6 +40,12 @@
                     {{ $restaurant->is_active ? __('Desativar') : __('Ativar') }}
                 </button>
             </form>
+            <form method="POST" action="{{ route('root.restaurants.destroy', $restaurant) }}" class="inline" onsubmit="return confirm('Tem certeza que deseja excluir este restaurante? Todas as operacoes associadas serao removidas.')">
+                @csrf @method('DELETE')
+                <button type="submit" class="btn-secondary text-sm text-red-600 hover:text-red-700 dark:text-red-400">
+                    <i class="fa-solid fa-trash-can text-sm mr-1"></i> Excluir
+                </button>
+            </form>
         </div>
     </div>
 
