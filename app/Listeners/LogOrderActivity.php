@@ -9,7 +9,7 @@ class LogOrderActivity
 {
     public function handle(OrderStatusChanged $event): void
     {
-        Log::info('Order status changed', [
+        Log::debug('Order status changed', [
             'restaurant_id' => $event->order->restaurant_id,
             'order_id' => $event->order->id,
             'order_number' => $event->order->order_number,

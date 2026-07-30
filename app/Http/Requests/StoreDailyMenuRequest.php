@@ -23,6 +23,8 @@ class StoreDailyMenuRequest extends FormRequest
             'price_medium.*' => ['nullable', 'numeric', 'min:0'],
             'price_large' => ['nullable', 'array'],
             'price_large.*' => ['nullable', 'numeric', 'min:0'],
+            'options' => ['nullable', 'array'],
+            'options.*' => ['exists:menu_options,id'],
             'is_published' => ['boolean'],
         ];
     }

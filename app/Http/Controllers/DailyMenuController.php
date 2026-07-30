@@ -33,13 +33,18 @@ class DailyMenuController extends Controller
             ->with(['dishes' => fn($q) => $q->where('is_available', true)])
             ->get();
 
-        return view('daily-menus.create', compact('categories'));
+        $optionCategories = DishCategory::where('restaurant_id', $restaurantId)
+            ->where('is_active', true)
+            ->with(['menuOptions' => fn($q) => $q->where('is_active', true)->orderBy('display_order')])
+            ->orderBy('display_order')
+            ->get();
+
+        return view('daily-menus.create', compact('categories', 'optionCategories'));
     }
 
     public function store(StoreDailyMenuRequest $request)
     {
         $restaurantId = $request->user()->restaurant_id;
-
         $validated = $request->validated();
 
         $menu = $this->dailyMenuService->getOrCreateMenu(
@@ -56,6 +61,10 @@ class DailyMenuController extends Controller
             ])->all();
 
             $this->dailyMenuService->syncMenuItems($menu, $items);
+        }
+
+        if (isset($validated['options'])) {
+            $menu->options()->sync($validated['options']);
         }
 
         return redirect()->route('daily-menus.index')->with('success', 'Cardápio criado com sucesso!');
@@ -78,12 +87,18 @@ class DailyMenuController extends Controller
             $dailyMenu->items()->delete();
         }
 
+        if (isset($validated['options'])) {
+            $dailyMenu->options()->sync($validated['options']);
+        } else {
+            $dailyMenu->options()->detach();
+        }
+
         return redirect()->route('daily-menus.index')->with('success', 'Cardápio atualizado com sucesso!');
     }
 
     public function show(DailyMenu $dailyMenu)
     {
-        $dailyMenu->load('items.dish');
+        $dailyMenu->load(['items.dish', 'options.category']);
 
         return view('daily-menus.show', ['menu' => $dailyMenu]);
     }
@@ -92,13 +107,23 @@ class DailyMenuController extends Controller
     {
         $restaurantId = $request->user()->restaurant_id;
 
-        $dailyMenu->load('items');
+        $dailyMenu->load(['items', 'options']);
 
         $categories = DishCategory::where('restaurant_id', $restaurantId)
             ->with(['dishes' => fn($q) => $q->where('is_available', true)])
             ->get();
 
-        return view('daily-menus.edit', ['menu' => $dailyMenu, 'categories' => $categories]);
+        $optionCategories = DishCategory::where('restaurant_id', $restaurantId)
+            ->where('is_active', true)
+            ->with(['menuOptions' => fn($q) => $q->where('is_active', true)->orderBy('display_order')])
+            ->orderBy('display_order')
+            ->get();
+
+        return view('daily-menus.edit', [
+            'menu' => $dailyMenu,
+            'categories' => $categories,
+            'optionCategories' => $optionCategories,
+        ]);
     }
 
     public function publish(DailyMenu $dailyMenu)
@@ -110,6 +135,7 @@ class DailyMenuController extends Controller
 
     public function destroy(DailyMenu $dailyMenu)
     {
+        $dailyMenu->options()->detach();
         $dailyMenu->items()->delete();
         $dailyMenu->delete();
 

@@ -80,6 +80,30 @@
         </div>
         @endforelse
 
+        @php
+            $groupedOptions = $menu->options->groupBy(fn($o) => $o->category?->name ?? 'Geral');
+        @endphp
+        @if ($groupedOptions->isNotEmpty())
+        <div class="mt-8 pt-6 border-t border-border dark:border-border-dark">
+            <h3 class="text-base font-semibold text-text-primary dark:text-text-dark mb-5 flex items-center gap-2">
+                <i class="fa-solid fa-utensils text-sm text-primary-600"></i>
+                {{ __('Opcoes do Marmitex') }}
+            </h3>
+            @foreach ($groupedOptions as $catName => $opts)
+            <div class="mb-5 last:mb-0">
+                <h4 class="text-sm font-semibold text-text-secondary dark:text-slate-400 mb-2 uppercase tracking-wide">{{ $catName }}</h4>
+                <div class="flex flex-wrap gap-2">
+                    @foreach ($opts as $opt)
+                    <span class="inline-flex items-center px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-sm text-text-primary dark:text-text-dark font-medium">
+                        {{ $opt->name }}
+                    </span>
+                    @endforeach
+                </div>
+            </div>
+            @endforeach
+        </div>
+        @endif
+
         <div class="mt-8 pt-6 border-t border-border dark:border-border-dark flex flex-wrap items-center justify-between gap-4">
             <div class="flex items-center gap-2 text-sm text-text-secondary dark:text-slate-400">
                 <i class="fa-solid fa-shield-halved text-sm"></i>

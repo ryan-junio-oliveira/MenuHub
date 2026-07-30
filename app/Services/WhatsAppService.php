@@ -311,6 +311,17 @@ class WhatsAppService implements WhatsAppInterface
             $message .= "\n";
         }
 
+        if (!empty($menuData['option_categories'])) {
+            $message .= "🍽️ *Opções do Marmitex*\n\n";
+            foreach ($menuData['option_categories'] as $ocat) {
+                $message .= "*{$ocat['name']}*\n";
+                foreach ($ocat['options'] as $opt) {
+                    $message .= "• {$opt['name']}\n";
+                }
+                $message .= "\n";
+            }
+        }
+
         $message .= "💬 *Para fazer seu pedido, responda esta mensagem ou clique no botão abaixo:*";
 
         $result = $this->sendInteractiveButtons($to, $message, [

@@ -42,6 +42,7 @@ class DishController extends Controller
             'price_large' => ['nullable', 'numeric', 'min:0'],
             'category_id' => ['required', 'exists:dish_categories,id'],
             'is_available' => ['boolean'],
+            'is_active' => ['boolean'],
             'is_gourmet' => ['boolean'],
             'max_selections' => ['nullable', 'integer', 'min:0'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
@@ -56,6 +57,7 @@ class DishController extends Controller
             'price_medium' => $validated['price_medium'] ?? $validated['price_small'] ?? null,
             'price_large' => $validated['price_large'] ?? $validated['price_medium'] ?? $validated['price_small'] ?? null,
             'is_available' => $validated['is_available'] ?? true,
+            'is_active' => $validated['is_active'] ?? true,
             'is_gourmet' => $validated['is_gourmet'] ?? false,
             'max_selections' => $validated['max_selections'] ?? 1,
         ];
@@ -88,6 +90,7 @@ class DishController extends Controller
             'price_large' => ['nullable', 'numeric', 'min:0'],
             'category_id' => ['required', 'exists:dish_categories,id'],
             'is_available' => ['boolean'],
+            'is_active' => ['boolean'],
             'is_gourmet' => ['boolean'],
             'max_selections' => ['nullable', 'integer', 'min:0'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
@@ -101,6 +104,7 @@ class DishController extends Controller
             'price_medium' => $validated['price_medium'] ?? $validated['price_small'] ?? null,
             'price_large' => $validated['price_large'] ?? $validated['price_medium'] ?? $validated['price_small'] ?? null,
             'is_available' => $validated['is_available'] ?? true,
+            'is_active' => $validated['is_active'] ?? true,
             'is_gourmet' => $validated['is_gourmet'] ?? false,
             'max_selections' => $validated['max_selections'] ?? 1,
         ];
@@ -115,6 +119,13 @@ class DishController extends Controller
         $dish->update($data);
 
         return redirect()->route('dishes.index')->with('success', 'Prato atualizado com sucesso!');
+    }
+
+    public function show(Dish $dish)
+    {
+        $dish->load('category');
+
+        return view('dishes.show', compact('dish'));
     }
 
     public function destroy(Dish $dish)

@@ -5,16 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class DishCategory extends Model
+class MenuOption extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'restaurant_id',
+        'dish_category_id',
         'name',
-        'description',
         'display_order',
         'is_active',
     ];
@@ -32,13 +31,8 @@ class DishCategory extends Model
         return $this->belongsTo(Restaurant::class);
     }
 
-    public function dishes(): HasMany
+    public function category(): BelongsTo
     {
-        return $this->hasMany(Dish::class);
-    }
-
-    public function menuOptions(): HasMany
-    {
-        return $this->hasMany(MenuOption::class, 'dish_category_id');
+        return $this->belongsTo(DishCategory::class, 'dish_category_id');
     }
 }

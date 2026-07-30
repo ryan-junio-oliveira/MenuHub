@@ -67,6 +67,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/restaurant', [RestaurantController::class, 'update'])->name('restaurant.update');
 
         Route::resource('dish-categories', DishCategoryController::class);
+        Route::resource('menu-options', MenuOptionController::class);
         Route::resource('dishes', DishController::class);
         Route::resource('daily-menus', DailyMenuController::class);
         Route::put('/daily-menus/{daily_menu}/publish', [DailyMenuController::class, 'publish'])->name('daily-menus.publish');
@@ -76,7 +77,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('/customers/search', [CustomerController::class, 'search'])->name('customers.search');
         Route::put('/customers/{customer}/anonymize', [CustomerController::class, 'anonymize'])->name('customers.anonymize');
-        Route::resource('customers', CustomerController::class);
+        Route::resource('customers', CustomerController::class)->except(['create', 'store']);
         Route::resource('customer-tags', CustomerTagController::class);
 
         Route::get('/orders/create', [OrderController::class, 'create'])->name('orders.create');

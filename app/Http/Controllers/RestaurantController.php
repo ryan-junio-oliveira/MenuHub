@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreRestaurantRequest;
 use App\Http\Requests\UpdateRestaurantSettingsRequest;
-use App\Mail\RestaurantInvitation;
+use App\Jobs\SendRestaurantInvitation;
 use App\Models\Customer;
 use App\Models\DailyMenu;
 use App\Models\Delivery;
@@ -20,7 +19,7 @@ use App\Services\SettingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -75,29 +74,11 @@ class RestaurantController extends Controller
         });
 
         $admin = $restaurant->adminUser();
-        $setupUrl = route('setup.show', $setupToken);
 
-        Mail::to($admin->email)->send(new RestaurantInvitation($restaurant, $admin, $setupUrl));
+        SendRestaurantInvitation::dispatch($restaurant);
 
         return redirect()->route('root.restaurants.index')
             ->with('success', "Restaurante '{$restaurant->razao_social}' criado! Um convite foi enviado para <strong>{$admin->email}</strong>.");
-    }
-
-    public function create()
-    {
-        return view('restaurant.create');
-    }
-
-    public function store(StoreRestaurantRequest $request)
-    {
-        $validated = $request->validated();
-
-        $restaurant = Restaurant::create($validated);
-
-        $request->user()->restaurant_id = $restaurant->id;
-        $request->user()->save();
-
-        return redirect()->route('dashboard');
     }
 
     public function show(Restaurant $restaurant)

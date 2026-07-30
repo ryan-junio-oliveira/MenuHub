@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\OrderCreated;
 use App\Events\OrderStatusChanged;
 use App\Listeners\LogOrderActivity;
+use App\Listeners\LogOrderCreation;
 use App\Listeners\SendOrderStatusNotification;
 use App\Listeners\UpdateCustomerStats;
 use App\Models\Customer;
@@ -86,6 +88,11 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        Event::listen(
+            OrderCreated::class,
+            [LogOrderCreation::class, 'handle'],
+        );
+
         Event::listen(
             OrderStatusChanged::class,
             [LogOrderActivity::class, 'handle'],

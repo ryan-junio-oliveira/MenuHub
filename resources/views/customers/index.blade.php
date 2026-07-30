@@ -13,10 +13,6 @@
                 <i class="fa-solid fa-tags text-sm"></i>
                 {{ __('Gerenciar Tags') }}
             </a>
-            <x-button variant="primary" size="md" :href="route('customers.create')">
-                <i class="fa-solid fa-plus text-sm"></i>
-                {{ __('Novo Cliente') }}
-            </x-button>
         </div>
     </div>
 

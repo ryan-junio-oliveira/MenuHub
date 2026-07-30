@@ -31,4 +31,9 @@ class CustomerPolicy
     {
         return $user->restaurant_id === $customer->restaurant_id;
     }
+
+    public function anonymize(User $user, Customer $customer): bool
+    {
+        return $user->restaurant_id === $customer->restaurant_id;
+    }
 }

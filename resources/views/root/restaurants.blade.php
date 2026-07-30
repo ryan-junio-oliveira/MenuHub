@@ -56,7 +56,7 @@
                         <th class="table-th">Usuários</th>
                         <th class="table-th">Pedidos</th>
                         <th class="table-th">Status</th>
-                        <th class="table-th">Cadastro</th>
+                        <th class="table-th">Convite</th>
                         <th class="table-th"></th>
                     </tr>
                 </thead>
@@ -87,7 +87,25 @@
                                 {{ $restaurant->is_active ? 'Ativo' : 'Inativo' }}
                             </span>
                         </td>
-                        <td class="table-td text-sm text-text-secondary">{{ $restaurant->created_at->format('d/m/Y') }}</td>
+                        <td class="table-td">
+                            @if ($restaurant->setup_completed_at)
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">
+                                    <i class="fa-regular fa-circle-check text-xs"></i> Completo
+                                </span>
+                            @elseif ($restaurant->invitation_failed_at)
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300" title="Falhou em {{ $restaurant->invitation_failed_at->format('d/m/Y H:i') }}">
+                                    <i class="fa-regular fa-circle-xmark text-xs"></i> Falha
+                                </span>
+                            @elseif ($restaurant->invitation_sent_at)
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300" title="Enviado em {{ $restaurant->invitation_sent_at->format('d/m/Y H:i') }}">
+                                    <i class="fa-regular fa-clock text-xs"></i> Pendente
+                                </span>
+                            @else
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300">
+                                    <i class="fa-regular fa-hourglass text-xs"></i> Aguardando
+                                </span>
+                            @endif
+                        </td>
                         <td class="table-td text-right">
                             <div class="flex items-center justify-end gap-2">
                                 <a href="{{ route('root.restaurants.show', $restaurant) }}" class="inline-flex items-center justify-center w-8 h-8 rounded-lg text-text-secondary hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors" title="Detalhes">

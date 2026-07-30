@@ -33,40 +33,6 @@ class CustomerController extends Controller
         return view('customers.index', compact('customers', 'tags'));
     }
 
-    public function create()
-    {
-        $restaurantId = request()->user()->restaurant_id;
-        $tags = CustomerTag::where('restaurant_id', $restaurantId)->get();
-
-        return view('customers.create', compact('tags'));
-    }
-
-    public function store(Request $request)
-    {
-        $restaurantId = $request->user()->restaurant_id;
-
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['nullable', 'email', 'max:255'],
-            'phone' => ['nullable', 'string', 'max:20'],
-            'address' => ['nullable', 'string'],
-            'notes' => ['nullable', 'string'],
-            'tags' => ['nullable', 'array'],
-            'tags.*' => ['exists:customer_tags,id'],
-        ]);
-
-        $customer = Customer::create([
-            ...$validated,
-            'restaurant_id' => $restaurantId,
-        ]);
-
-        if (!empty($validated['tags'])) {
-            $customer->tags()->sync($validated['tags']);
-        }
-
-        return redirect()->route('customers.index')->with('success', 'Cliente criado com sucesso!');
-    }
-
     public function show(Customer $customer)
     {
         $customer->loadCount('orders');

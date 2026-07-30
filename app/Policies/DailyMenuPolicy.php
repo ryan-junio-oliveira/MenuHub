@@ -31,4 +31,9 @@ class DailyMenuPolicy
     {
         return $user->restaurant_id === $dailyMenu->restaurant_id;
     }
+
+    public function publish(User $user, DailyMenu $dailyMenu): bool
+    {
+        return $user->restaurant_id === $dailyMenu->restaurant_id;
+    }
 }

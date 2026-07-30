@@ -26,6 +26,15 @@ class DishCategoryController extends Controller
         return view('dish-categories.create');
     }
 
+    public function show(DishCategory $dishCategory)
+    {
+        $this->authorize('view', $dishCategory);
+
+        $dishes = $dishCategory->dishes()->orderBy('name')->get();
+
+        return view('dish-categories.show', compact('dishCategory', 'dishes'));
+    }
+
     public function store(Request $request)
     {
         $this->authorize('create', DishCategory::class);

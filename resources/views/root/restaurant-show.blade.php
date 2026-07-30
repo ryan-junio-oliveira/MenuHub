@@ -120,10 +120,23 @@
                     @if (!$restaurant->isSetupComplete())
                     <div>
                         <p class="text-xs text-text-secondary uppercase tracking-wider mb-1">{{ __('Setup') }}</p>
-                        <p class="text-sm font-medium text-amber-600 dark:text-amber-400">
-                            <i class="fa-regular fa-clock mr-1"></i>
-                            Aguardando admin completar cadastro
-                        </p>
+                        @if ($restaurant->invitation_failed_at)
+                            <p class="text-sm font-medium text-red-600 dark:text-red-400">
+                                <i class="fa-regular fa-circle-xmark mr-1"></i>
+                                Falha no envio do convite — {{ $restaurant->invitation_failed_at->format('d/m/Y H:i') }}
+                            </p>
+                        @elseif ($restaurant->invitation_sent_at)
+                            <p class="text-sm font-medium text-amber-600 dark:text-amber-400">
+                                <i class="fa-regular fa-clock mr-1"></i>
+                                Convite enviado em {{ $restaurant->invitation_sent_at->format('d/m/Y H:i') }}
+                            </p>
+                            <p class="text-xs text-text-secondary mt-0.5">Aguardando admin completar cadastro</p>
+                        @else
+                            <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
+                                <i class="fa-regular fa-hourglass mr-1"></i>
+                                Convite aguardando envio
+                            </p>
+                        @endif
                     </div>
                     @else
                     <div>

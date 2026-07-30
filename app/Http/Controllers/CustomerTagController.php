@@ -23,6 +23,13 @@ class CustomerTagController extends Controller
         return view('customer-tags.form', ['tag' => null]);
     }
 
+    public function show(CustomerTag $customerTag)
+    {
+        $customers = $customerTag->customers()->withCount('orders')->orderBy('name')->get();
+
+        return view('customer-tags.show', compact('customerTag', 'customers'));
+    }
+
     public function store(Request $request)
     {
         $restaurantId = $request->user()->restaurant_id;

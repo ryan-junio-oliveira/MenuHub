@@ -35,6 +35,9 @@
                         </td>
                         <td class="table-td text-sm text-text-secondary">{{ $tag->customers_count }}</td>
                         <td class="table-td text-right">
+                            <a href="{{ route('customer-tags.show', $tag) }}" class="inline-flex items-center justify-center w-8 h-8 rounded-lg text-text-secondary hover:text-primary-600 transition-colors" title="Visualizar">
+                                <i class="fa-regular fa-eye text-sm"></i>
+                            </a>
                             <a href="{{ route('customer-tags.edit', $tag) }}" class="inline-flex items-center justify-center w-8 h-8 rounded-lg text-text-secondary hover:text-text-primary transition-colors">
                                 <i class="fa-regular fa-pen-to-square text-sm"></i>
                             </a>

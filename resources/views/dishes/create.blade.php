@@ -73,6 +73,10 @@
                     <span class="text-sm text-text-primary dark:text-text-dark">{{ __('Disponível') }}</span>
                 </label>
                 <label class="inline-flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" id="is_active" name="is_active" value="1" checked class="rounded border-border dark:border-border-dark text-green-600 shadow-sm focus:ring-green-500" />
+                    <span class="text-sm text-text-primary dark:text-text-dark">{{ __('Ativo') }}</span>
+                </label>
+                <label class="inline-flex items-center gap-2 cursor-pointer">
                     <input type="checkbox" id="is_gourmet" name="is_gourmet" value="1" class="rounded border-border dark:border-border-dark text-amber-600 shadow-sm focus:ring-amber-500" />
                     <span class="text-sm text-text-primary dark:text-text-dark">{{ __('Gourmet / Adicional') }}</span>
                 </label>

@@ -31,7 +31,7 @@ class MenuDispatchController extends Controller
             return redirect()->back()->with('error', 'O cardápio precisa estar publicado para ser enviado.');
         }
 
-        $dailyMenu->load('items.dish.category');
+        $dailyMenu->load(['items.dish.category', 'options.category']);
 
         $customers = Customer::where('restaurant_id', $restaurant->id)
             ->whereNotNull('phone')
@@ -108,6 +108,15 @@ class MenuDispatchController extends Controller
             ];
         }
 
+        $optionCategories = [];
+        $optionGrouped = $menu->options->groupBy(fn($o) => $o->category?->name ?? 'Geral');
+        foreach ($optionGrouped as $catName => $opts) {
+            $optionCategories[] = [
+                'name' => $catName,
+                'options' => $opts->map(fn($o) => ['id' => $o->id, 'name' => $o->name])->toArray(),
+            ];
+        }
+
         $menuDate = $menu->menu_date instanceof \Carbon\Carbon
             ? $menu->menu_date->format('d/m/Y')
             : $menu->menu_date;
@@ -115,6 +124,7 @@ class MenuDispatchController extends Controller
         return [
             'date' => $menuDate,
             'categories' => $categories,
+            'option_categories' => $optionCategories,
         ];
     }
 

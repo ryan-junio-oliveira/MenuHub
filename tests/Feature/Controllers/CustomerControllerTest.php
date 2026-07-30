@@ -35,38 +35,6 @@ class CustomerControllerTest extends TestCase
         $response->assertViewIs('customers.index');
     }
 
-    public function test_create_displays_form(): void
-    {
-        $response = $this->actingAs($this->user)->get(route('customers.create'));
-
-        $response->assertOk();
-        $response->assertViewIs('customers.create');
-    }
-
-    public function test_store_creates_customer(): void
-    {
-        $response = $this->actingAs($this->user)->post(route('customers.store'), [
-            'name' => 'João Silva',
-            'phone' => '(11) 99999-8888',
-            'email' => 'joao@example.com',
-        ]);
-
-        $response->assertRedirect(route('customers.index'));
-        $this->assertDatabaseHas('customers', [
-            'restaurant_id' => $this->restaurant->id,
-            'name' => 'João Silva',
-        ]);
-    }
-
-    public function test_store_validates_required_name(): void
-    {
-        $response = $this->actingAs($this->user)->post(route('customers.store'), [
-            'name' => '',
-        ]);
-
-        $response->assertSessionHasErrors('name');
-    }
-
     public function test_show_displays_customer(): void
     {
         $customer = Customer::factory()->for($this->restaurant)->create();

@@ -36,6 +36,8 @@ class Restaurant extends Model
         'paid_until',
         'setup_token',
         'setup_completed_at',
+        'invitation_sent_at',
+        'invitation_failed_at',
     ];
 
     protected function casts(): array
@@ -48,6 +50,8 @@ class Restaurant extends Model
             'trial_ends_at' => 'datetime',
             'paid_until' => 'datetime',
             'setup_completed_at' => 'datetime',
+            'invitation_sent_at' => 'datetime',
+            'invitation_failed_at' => 'datetime',
         ];
     }
 

@@ -27,6 +27,9 @@
                     <td class="table-td text-text-secondary">{{ $category->dishes_count ?? 0 }}</td>
                     <td class="table-td text-right">
                         <div class="flex items-center justify-end gap-2">
+                            <a href="{{ route('dish-categories.show', $category) }}" class="inline-flex items-center justify-center w-8 h-8 rounded-lg text-text-secondary hover:text-primary-600 hover:bg-primary-50 transition-colors" title="Visualizar">
+                                <i class="fa-regular fa-eye text-sm"></i>
+                            </a>
                             <a href="{{ route('dish-categories.edit', $category) }}" class="inline-flex items-center justify-center w-8 h-8 rounded-lg text-text-secondary hover:text-text-primary dark:hover:text-text-dark hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" title="Editar">
                                 <i class="fa-regular fa-pen-to-square text-sm"></i>
                             </a>

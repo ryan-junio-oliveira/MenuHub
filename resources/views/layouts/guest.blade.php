@@ -95,14 +95,15 @@
                 </a>
             </div>
 
-            <div class="w-full max-w-md mt-16 lg:mt-0">
+            <div class="w-full max-w-2xl mt-16 lg:mt-0">
                 {{-- Desktop logo hidden on mobile --}}
                 <div class="hidden lg:block mb-8">
                     <x-logo dark class="h-11" />
                 </div>
 
                 <div class="auth-form-card bg-slate-900/70 backdrop-blur-xl border border-slate-800 rounded-3xl p-8 sm:p-10 shadow-2xl shadow-black/40">
-                    {{ $slot }}
+                    @yield('content')
+                    {{ $slot ?? '' }}
                 </div>
             </div>
         </div>

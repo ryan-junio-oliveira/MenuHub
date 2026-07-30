@@ -6,74 +6,46 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="color-scheme" content="light">
 <meta name="supported-color-schemes" content="light">
-<style>
-@media only screen and (max-width: 600px) {
-.inner-body { width: 100% !important; }
-.footer { width: 100% !important; }
-.content-cell { padding: 24px 20px !important; }
-}
-@media only screen and (max-width: 500px) {
-.button { width: 100% !important; }
-}
-</style>
 {!! $head ?? '' !!}
 </head>
-<body>
+<body style="margin:0;padding:0;background-color:#f4f4f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
 
-<table class="wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+<table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color:#f4f4f5;">
 <tr>
-<td align="center">
-<table class="content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+<td align="center" style="padding:32px 16px;">
+
+<table width="570" cellpadding="0" cellspacing="0" role="presentation" style="max-width:570px;width:100%;background-color:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 16px -2px rgba(0,0,0,0.06),0 2px 4px -2px rgba(0,0,0,0.04);">
 
 <!-- Header -->
 <tr>
-<td class="header">
-<table width="100%" cellpadding="0" cellspacing="0" role="presentation">
-<tr>
-<td class="header-cell">
-<a href="{{ config('app.url') }}">
-MenuHub
-</a>
-<p class="header-subtitle">Sistema de Gestão para Restaurantes</p>
-</td>
-</tr>
-</table>
+<td align="center" style="background:linear-gradient(135deg,#f97316,#ea580c);padding:36px 32px 28px;">
+<div style="display:inline-block;background-color:rgba(255,255,255,0.2);border-radius:10px;padding:8px 20px;">
+<span style="color:#ffffff;font-size:24px;font-weight:800;letter-spacing:-0.02em;">MenuHub</span>
+</div>
+<p style="color:rgba(255,255,255,0.85);font-size:14px;margin:10px 0 0;text-align:center;">Sistema de Gestao para Restaurantes</p>
 </td>
 </tr>
 
-<!-- Email Body -->
+<!-- Body -->
 <tr>
-<td class="body" width="100%" cellpadding="0" cellspacing="0" style="border: hidden !important;">
-<table class="inner-body" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
-<!-- Body content -->
-<tr>
-<td class="content-cell">
+<td style="padding:32px 32px;background-color:#ffffff;">
 {!! Illuminate\Mail\Markdown::parse($slot) !!}
-
 {{ $subcopy ?? '' }}
-</td>
-</tr>
-</table>
 </td>
 </tr>
 
 <!-- Footer -->
 <tr>
-<td class="footer">
-<table width="570" cellpadding="0" cellspacing="0" role="presentation">
-<tr>
-<td>
-<p>&copy; {{ date('Y') }} MenuHub. Todos os direitos reservados.</p>
-<p style="margin-top: 4px;">
-<a href="{{ config('app.url') }}">{{ config('app.url') }}</a>
+<td align="center" style="padding:20px 32px;background-color:#fafafa;border-top:1px solid #e4e4e7;">
+<p style="color:#a1a1aa;font-size:12px;margin:0;">&copy; {{ date('Y') }} MenuHub. Todos os direitos reservados.</p>
+<p style="margin:4px 0 0;">
+<a href="{{ config('app.url') }}" style="color:#a1a1aa;font-size:12px;text-decoration:underline;">{{ config('app.url') }}</a>
 </p>
-</td>
-</tr>
-</table>
 </td>
 </tr>
 
 </table>
+
 </td>
 </tr>
 </table>

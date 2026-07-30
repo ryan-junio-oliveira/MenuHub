@@ -92,6 +92,38 @@
                         @endforeach
                     </div>
                 </x-card>
+
+                <x-card padding="6">
+                    <h3 class="text-base font-semibold text-text-primary dark:text-text-dark mb-1">{{ __('Opcoes do Marmitex') }}</h3>
+                    <p class="text-sm text-text-secondary dark:text-slate-400 mb-5">{{ __('Selecione as opcoes disponiveis para o marmitex.') }}</p>
+
+                    <div class="space-y-3">
+                        @forelse ($optionCategories ?? [] as $cat)
+                        <div class="rounded-xl border border-border dark:border-border-dark overflow-hidden">
+                            <div class="px-5 py-3 bg-slate-50 dark:bg-slate-800/50">
+                                <h4 class="text-sm font-semibold text-text-primary dark:text-text-dark">{{ $cat->name }}</h4>
+                            </div>
+                            <div class="divide-y divide-border dark:divide-border-dark">
+                                @foreach ($cat->menuOptions as $opt)
+                                <label class="flex items-center gap-3 px-5 py-3 hover:bg-slate-50/50 dark:hover:bg-slate-700/20 cursor-pointer transition-colors">
+                                    <input type="checkbox" name="options[]" value="{{ $opt->id }}"
+                                        {{ $menu->options->contains($opt->id) ? 'checked' : '' }}
+                                        class="h-4 w-4 rounded border-border dark:border-border-dark text-primary-600 focus:ring-primary-500">
+                                    <span class="text-sm font-medium text-text-primary dark:text-text-dark">{{ $opt->name }}</span>
+                                </label>
+                                @endforeach
+                            </div>
+                        </div>
+                        @empty
+                        <div class="text-center py-8 text-text-secondary">
+                            <p class="text-sm">{{ __('Nenhuma opcao cadastrada.') }}</p>
+                            <a href="{{ route('menu-options.create') }}" class="text-sm text-primary-600 hover:underline mt-1 inline-block">
+                                {{ __('Criar opcoes') }}
+                            </a>
+                        </div>
+                        @endforelse
+                    </div>
+                </x-card>
             </div>
 
             <div class="lg:col-span-1">

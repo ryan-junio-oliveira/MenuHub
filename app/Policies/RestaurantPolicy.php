@@ -31,4 +31,9 @@ class RestaurantPolicy
     {
         return $user->restaurant_id === $restaurant->id;
     }
+
+    public function toggleActive(User $user, Restaurant $restaurant): bool
+    {
+        return $user->role === 'root';
+    }
 }
